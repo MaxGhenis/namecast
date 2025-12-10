@@ -4,8 +4,21 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>BrandEval - AI-Powered Brand Name Intelligence</title>
-    <meta name="description" content="Evaluate brand names with AI. Check domain availability, social handles, trademark risk, pronunciation, and brand-mission alignment in one automated scorecard." />
+    <title>Namecast - AI-Powered Brand Name Oracle</title>
+    <meta name="description" content="Forecast your brand name's future with AI. Check domain availability, social handles, trademark risk, pronunciation, and brand-mission alignment in one unified scorecard." />
+    <!-- Handle GitHub Pages SPA routing -->
+    <script>
+      (function(l) {
+        if (l.search[1] === '/' ) {
+          var decoded = l.search.slice(1).split('&').map(function(s) {
+            return s.replace(/~and~/g, '&')
+          }).join('?');
+          window.history.replaceState(null, null,
+              l.pathname.slice(0, -1) + decoded + l.hash
+          );
+        }
+      }(window.location))
+    </script>
   </head>
   <body>
     <div id="root"></div>
