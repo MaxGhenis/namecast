@@ -57,6 +57,24 @@ class PerceptionResult:
 
 
 @dataclass
+class BrandScopeResult:
+    """Result of brand scope analysis."""
+    narrowness: float  # 1-10, higher = more expansive
+    expansion_potential: float  # 1-10
+    vision_alignment: float  # 1-10
+    assessment: str  # Text explanation
+
+
+@dataclass
+class DomainStatus:
+    """Detailed domain status."""
+    available: bool  # Not registered
+    parked: bool  # Registered but no active site
+    active: bool  # Has live website
+    status: str  # "available", "parked", "active"
+
+
+@dataclass
 class EvaluationResult:
     """Complete brand evaluation result."""
     name: str
@@ -67,14 +85,19 @@ class EvaluationResult:
     pronunciation_score: float
     international_score: float
     similar_companies_score: float = 100.0
+    brand_scope_score: float = 100.0
+    tagline_score: float = 100.0
 
     domains: dict[str, bool] = field(default_factory=dict)
+    domain_details: dict[str, DomainStatus] = field(default_factory=dict)
     social: dict[str, SocialHandleResult] = field(default_factory=dict)
     trademark: Optional[TrademarkResult] = None
     pronunciation: Optional[PronunciationResult] = None
     international: dict[str, dict] = field(default_factory=dict)
     perception: Optional[PerceptionResult] = None
     similar_companies: Optional[SimilarCompaniesResult] = None
+    brand_scope: Optional[BrandScopeResult] = None
+    taglines: list[str] = field(default_factory=list)
 
     def to_dict(self) -> dict:
         """Export as dictionary."""
@@ -175,30 +198,37 @@ class BrandEvaluator:
             planned_domain: The domain you plan to use (e.g., "farness.ai") -
                            used to suggest matching social handle alternatives
         """
-        domains = self.check_domains(name)
+        domains, domain_details = self.check_domains_detailed(name)
         social = self.check_social(name, planned_domain)
         trademark = self.check_trademark(name)
         pronunciation = self.analyze_pronunciation(name)
         international = self.check_international(name)
         perception = self.analyze_perception(name, mission)
         similar_companies = self.find_similar_companies(name)
+        brand_scope = self.analyze_brand_scope(name, mission)
+        taglines = self.generate_taglines(name, mission) if mission else []
 
         # Calculate scores
-        domain_score = self._calc_domain_score(domains)
+        domain_score = self._calc_domain_score_detailed(domain_details)
         social_score = self._calc_social_score(social)
         trademark_score = self._calc_trademark_score(trademark)
         pronunciation_score = pronunciation.score * 10  # 0-10 -> 0-100
         international_score = self._calc_international_score(international)
         similar_companies_score = self._calc_similar_companies_score(similar_companies)
+        brand_scope_score = self._calc_brand_scope_score(brand_scope)
+        tagline_score = 70.0 if taglines else 50.0  # Placeholder
 
-        # Weighted overall score
+        # Weighted overall score (updated weights)
         overall_score = (
-            domain_score * 0.20
-            + social_score * 0.10
-            + trademark_score * 0.20
-            + pronunciation_score * 0.15
-            + international_score * 0.15
-            + similar_companies_score * 0.20
+            domain_score * 0.15
+            + social_score * 0.05
+            + trademark_score * 0.15
+            + pronunciation_score * 0.10
+            + international_score * 0.10
+            + similar_companies_score * 0.15
+            + brand_scope_score * 0.15
+            + tagline_score * 0.10
+            + (perception.mission_alignment or 7) * 0.5  # 0-10 -> 0-5 pts
         )
 
         return EvaluationResult(
@@ -210,17 +240,22 @@ class BrandEvaluator:
             pronunciation_score=pronunciation_score,
             international_score=international_score,
             similar_companies_score=similar_companies_score,
+            brand_scope_score=brand_scope_score,
+            tagline_score=tagline_score,
             domains=domains,
+            domain_details=domain_details,
             social=social,
             trademark=trademark,
             pronunciation=pronunciation,
             international=international,
             perception=perception,
             similar_companies=similar_companies,
+            brand_scope=brand_scope,
+            taglines=taglines,
         )
 
     def check_domains(self, name: str) -> dict[str, bool]:
-        """Check domain availability across TLDs."""
+        """Check domain availability across TLDs (simple version)."""
         result = {}
         name_lower = name.lower()
         for tld in self.DEFAULT_TLDS:
@@ -228,6 +263,54 @@ class BrandEvaluator:
             info = whois_lookup(domain)
             result[tld] = info is None  # Available if no WHOIS record
         return result
+
+    def check_domains_detailed(self, name: str) -> tuple[dict[str, bool], dict[str, DomainStatus]]:
+        """Check domain availability with live site detection.
+
+        Returns:
+            Tuple of (simple bool dict for backwards compat, detailed status dict)
+        """
+        import subprocess
+
+        simple_result = {}
+        detailed_result = {}
+        name_lower = name.lower()
+
+        for tld in self.DEFAULT_TLDS:
+            domain = f"{name_lower}{tld}"
+
+            # Step 1: Check if site is live (curl)
+            is_live = False
+            try:
+                result = subprocess.run(
+                    ["curl", "-sI", "--connect-timeout", "3", f"https://{domain}"],
+                    capture_output=True,
+                    text=True,
+                    timeout=5
+                )
+                # If we get HTTP headers, site is live
+                is_live = "HTTP/" in result.stdout
+            except (subprocess.TimeoutExpired, Exception):
+                is_live = False
+
+            # Step 2: Check whois registration
+            whois_info = whois_lookup(domain)
+            is_registered = whois_info is not None
+
+            # Classify: available / parked / active
+            if not is_registered:
+                status = DomainStatus(available=True, parked=False, active=False, status="available")
+                simple_result[tld] = True
+            elif is_registered and not is_live:
+                status = DomainStatus(available=False, parked=True, active=False, status="parked")
+                simple_result[tld] = False  # Not available but acquirable
+            else:
+                status = DomainStatus(available=False, parked=False, active=True, status="active")
+                simple_result[tld] = False
+
+            detailed_result[tld] = status
+
+        return simple_result, detailed_result
 
     def check_social(self, name: str, planned_domain: Optional[str] = None) -> dict[str, SocialHandleResult]:
         """Check social media handle availability with alternatives.
@@ -563,6 +646,161 @@ Only include companies with similarity_score > 0.4. Respond ONLY with valid JSON
             return 60
         else:
             return 85
+
+    def _calc_domain_score_detailed(self, domain_details: dict[str, DomainStatus]) -> float:
+        """Calculate domain score with available/parked/active distinction."""
+        if not domain_details:
+            return 0
+
+        score = 0
+        # Score per domain: available=100, parked=60, active=0
+        weights = {".com": 0.4, ".ai": 0.3, ".io": 0.15, ".co": 0.1, ".app": 0.05}
+
+        for tld, status in domain_details.items():
+            weight = weights.get(tld, 0.1)
+            if status.available:
+                score += 100 * weight
+            elif status.parked:
+                score += 60 * weight  # Parked = acquirable
+            # Active = 0 points
+
+        return score
+
+    def _calc_brand_scope_score(self, brand_scope: Optional[BrandScopeResult]) -> float:
+        """Calculate brand scope score (0-100)."""
+        if not brand_scope:
+            return 70  # Default if not analyzed
+        # Average of the three metrics, scaled to 100
+        avg = (brand_scope.narrowness + brand_scope.expansion_potential + brand_scope.vision_alignment) / 3
+        return avg * 10  # 0-10 -> 0-100
+
+    def analyze_brand_scope(self, name: str, mission: Optional[str] = None) -> BrandScopeResult:
+        """Analyze if the name boxes in the company or allows for growth."""
+        if os.environ.get("ANTHROPIC_API_KEY") and mission:
+            try:
+                return self._analyze_brand_scope_with_llm(name, mission)
+            except Exception as e:
+                print(f"Brand scope analysis failed: {e}")
+
+        # Fallback heuristic
+        return self._analyze_brand_scope_heuristic(name)
+
+    def _analyze_brand_scope_heuristic(self, name: str) -> BrandScopeResult:
+        """Simple heuristic brand scope analysis."""
+        name_lower = name.lower()
+
+        # Narrow indicators (product-specific words)
+        narrow_words = ["bot", "ai", "app", "tool", "api", "hub", "sync", "track", "log", "scan"]
+        industry_words = ["tax", "pay", "mail", "chat", "code", "doc", "form", "data", "cloud"]
+
+        narrowness = 7  # Default: moderately expansive
+        if any(word in name_lower for word in narrow_words):
+            narrowness -= 2
+        if any(word in name_lower for word in industry_words):
+            narrowness -= 2
+
+        # Abstract names get bonus
+        if len(name) <= 6 and not any(word in name_lower for word in narrow_words + industry_words):
+            narrowness += 1
+
+        narrowness = max(1, min(10, narrowness))
+
+        return BrandScopeResult(
+            narrowness=narrowness,
+            expansion_potential=narrowness,  # Correlated
+            vision_alignment=7,  # Can't assess without mission
+            assessment=f"Heuristic analysis: {'expansive' if narrowness >= 7 else 'moderate' if narrowness >= 4 else 'narrow'} brand scope"
+        )
+
+    def _analyze_brand_scope_with_llm(self, name: str, mission: str) -> BrandScopeResult:
+        """Use LLM to analyze brand scope."""
+        from anthropic import Anthropic
+        client = Anthropic()
+
+        prompt = f"""Analyze the brand name "{name}" for a company with this mission:
+"{mission}"
+
+Evaluate brand scope - does the name box in the company or allow for growth?
+
+Consider:
+1. **Narrowness**: Does the name imply only ONE product/feature?
+   - "TaxGraph" = narrow (only tax)
+   - "Amazon" = expansive (completely abstract)
+
+2. **Expansion potential**: Could the company expand into adjacent areas?
+
+3. **Vision alignment**: Does the name capture the FULL mission?
+
+Rate each 1-10 (10 = most expansive/aligned).
+
+Respond in JSON:
+{{
+    "narrowness": 7,
+    "expansion_potential": 8,
+    "vision_alignment": 6,
+    "assessment": "Brief explanation of the brand scope"
+}}
+
+Respond ONLY with valid JSON."""
+
+        response = client.messages.create(
+            model="claude-sonnet-4-20250514",
+            max_tokens=500,
+            messages=[{"role": "user", "content": prompt}],
+        )
+
+        result = json.loads(response.content[0].text)
+
+        return BrandScopeResult(
+            narrowness=result["narrowness"],
+            expansion_potential=result["expansion_potential"],
+            vision_alignment=result["vision_alignment"],
+            assessment=result["assessment"],
+        )
+
+    def generate_taglines(self, name: str, mission: str) -> list[str]:
+        """Generate taglines that complement the name."""
+        if not os.environ.get("ANTHROPIC_API_KEY"):
+            return []
+
+        try:
+            from anthropic import Anthropic
+            client = Anthropic()
+
+            prompt = f"""Generate 3 taglines for the brand "{name}" with this mission:
+"{mission}"
+
+Good taglines:
+- Explain/complement the name if it's abstract
+- Capture the full mission
+- Are memorable and quotable (under 8 words)
+
+Examples:
+- Apple: "Think Different"
+- Nike: "Just Do It"
+- Stripe: "Payments infrastructure for the internet"
+
+Respond with ONLY a JSON array:
+["tagline 1", "tagline 2", "tagline 3"]"""
+
+            response = client.messages.create(
+                model="claude-sonnet-4-20250514",
+                max_tokens=300,
+                messages=[{"role": "user", "content": prompt}],
+            )
+
+            text = response.content[0].text.strip()
+            if text.startswith("```"):
+                text = text.split("```")[1]
+                if text.startswith("json"):
+                    text = text[4:]
+                text = text.strip()
+
+            return json.loads(text)
+
+        except Exception as e:
+            print(f"Tagline generation failed: {e}")
+            return []
 
     def quick_domain_check(self, name: str) -> dict[str, bool]:
         """Fast domain check - just .com and .io for filtering."""
