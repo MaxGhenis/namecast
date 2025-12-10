@@ -1,14 +1,15 @@
 {
+  "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
   "name": "namecast",
   "owner": {
-    "name": "maxghenis"
+    "name": "Max Ghenis"
   },
   "plugins": [
     {
       "name": "namecast",
-      "source": "./",
-      "description": "AI-powered brand name oracle",
-      "version": "0.3.0"
+      "source": "/Users/maxghenis/Projects/namecast",
+      "description": "AI-powered brand name oracle - generate, filter, and evaluate brand names",
+      "version": "0.4.0"
     }
   ]
 }
