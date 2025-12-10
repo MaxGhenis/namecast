@@ -38,7 +38,7 @@ describe('HomePage', () => {
   it('displays feature cards', () => {
     renderHomePage()
     expect(screen.getByText(/Domain.*Social Availability/i)).toBeInTheDocument()
-    expect(screen.getByText('Trademark Risk Analysis')).toBeInTheDocument()
+    expect(screen.getByText('Similar Company Check')).toBeInTheDocument()
     expect(screen.getByText('AI Perception Forecasting')).toBeInTheDocument()
   })
 

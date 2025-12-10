@@ -75,10 +75,13 @@ def _print_result(result, mission: str | None):
         social_table.add_row(platform, status)
     console.print(social_table)
 
-    # Trademark
+    # Similar trademarks (informational only)
     if result.trademark:
-        risk_color = {"low": "green", "medium": "yellow", "high": "red"}[result.trademark.risk_level]
-        console.print(f"\n[bold]Trademark Risk:[/bold] [{risk_color}]{result.trademark.risk_level.upper()}[/{risk_color}]")
+        match_count = len(result.trademark.matches)
+        if match_count == 0:
+            console.print(f"\n[bold]Similar Trademarks:[/bold] [green]None found[/green]")
+        else:
+            console.print(f"\n[bold]Similar Trademarks:[/bold] {match_count} found")
 
     # Pronunciation
     if result.pronunciation:
@@ -117,7 +120,7 @@ def _print_comparison(results):
     table.add_row("Overall", *[f"{r.overall_score:.0f}" for r in results])
     table.add_row("Domain", *[f"{r.domain_score:.0f}" for r in results])
     table.add_row("Social", *[f"{r.social_score:.0f}" for r in results])
-    table.add_row("Trademark", *[f"{r.trademark_score:.0f}" for r in results])
+    table.add_row("Similar Names", *[f"{r.trademark_score:.0f}" for r in results])
     table.add_row("Pronunciation", *[f"{r.pronunciation_score:.0f}" for r in results])
     table.add_row("International", *[f"{r.international_score:.0f}" for r in results])
 

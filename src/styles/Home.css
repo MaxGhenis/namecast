@@ -984,3 +984,20 @@
   color: var(--color-text-tertiary);
   font-size: 0.7rem;
 }
+
+/* ============================================
+   DISCLAIMER
+   ============================================ */
+
+.eval-disclaimer {
+  margin-top: var(--space-lg);
+  padding: var(--space-md);
+  background: rgba(var(--color-text-rgb, 255, 255, 255), 0.03);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  font-family: var(--font-satoshi);
+  font-size: 0.75rem;
+  color: var(--color-text-tertiary);
+  text-align: center;
+  line-height: 1.5;
+}

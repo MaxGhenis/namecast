@@ -115,10 +115,10 @@ class EvaluationResult:
                 status = "✓" if result else "✗"
                 lines.append(f"| {platform} | {status} | - |")
 
-        if self.trademark:
+        if self.trademark and self.trademark.matches:
             lines.extend([
                 "",
-                f"### Trademark Risk: {self.trademark.risk_level.upper()}",
+                f"### Similar Trademarks: {len(self.trademark.matches)} found",
             ])
 
         if self.pronunciation:
@@ -132,7 +132,7 @@ class EvaluationResult:
         if self.similar_companies and self.similar_companies.matches:
             lines.extend([
                 "",
-                f"### Similar Companies: {self.similar_companies.confusion_risk.upper()} RISK",
+                f"### Similar Companies: {len(self.similar_companies.matches)} found",
                 "",
             ])
             for company in self.similar_companies.matches:

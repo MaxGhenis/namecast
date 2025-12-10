@@ -176,9 +176,9 @@ export default function HomePage() {
                   <svg className="metric-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                     <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
                   </svg>
-                  <div className="metric-label">Trademark</div>
-                  <div className={`metric-value ${result.trademark.risk_level === 'low' ? 'available' : result.trademark.risk_level === 'medium' ? 'partial' : 'unavailable'}`}>
-                    {result.trademark.risk_level.charAt(0).toUpperCase() + result.trademark.risk_level.slice(1)} Risk
+                  <div className="metric-label">Similar Names</div>
+                  <div className={`metric-value ${result.trademark.matches.length === 0 ? 'available' : result.trademark.matches.length <= 2 ? 'partial' : 'unavailable'}`}>
+                    {result.trademark.matches.length} Found
                   </div>
                 </div>
 
@@ -243,6 +243,11 @@ export default function HomePage() {
                   <strong>Industry Association:</strong> {result.perception.industry_association.join(', ')}
                 </div>
               </div>
+
+              <div className="eval-disclaimer">
+                This tool provides general information only and does not constitute legal advice.
+                Consult a trademark attorney before finalizing your brand name.
+              </div>
             </div>
           )}
         </div>
@@ -276,10 +281,10 @@ export default function HomePage() {
                 <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
               </svg>
             </div>
-            <h3>Trademark Risk Analysis</h3>
+            <h3>Similar Company Check</h3>
             <p>
-              Search USPTO, EUIPO, and international trademark databases.
-              Identify potential conflicts before they become lawsuits.
+              Find existing companies with similar names.
+              Research potential naming conflicts before you commit.
             </p>
           </div>
 
@@ -360,7 +365,7 @@ export default function HomePage() {
             <div className="step-number">2</div>
             <h3>Receive the Forecast</h3>
             <p>
-              Our oracle checks domains, social handles, trademarks, pronunciation,
+              Our oracle checks domains, social handles, similar companies, pronunciation,
               and forecasts how people will perceive each name.
             </p>
           </div>
