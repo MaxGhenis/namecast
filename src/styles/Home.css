@@ -864,6 +864,63 @@
   }
 }
 
+/* ============================================
+   ERROR & DETAILS STATES
+   ============================================ */
+
+.eval-error {
+  background: rgba(239, 68, 68, 0.1);
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  color: #ef4444;
+  padding: var(--space-md) var(--space-lg);
+  border-radius: var(--radius-lg);
+  margin-top: var(--space-lg);
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+.eval-details {
+  margin-top: var(--space-xl);
+  padding-top: var(--space-lg);
+  border-top: 1px solid var(--color-border);
+}
+
+.eval-details h4 {
+  font-family: var(--font-clash);
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--color-text-dim);
+  margin-bottom: var(--space-md);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.domain-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-sm);
+}
+
+.domain-chip {
+  font-family: var(--font-mono, monospace);
+  font-size: 0.85rem;
+  padding: var(--space-xs) var(--space-md);
+  border-radius: var(--radius-md);
+  border: 1px solid;
+}
+
+.domain-chip.available {
+  background: rgba(74, 222, 128, 0.1);
+  border-color: rgba(74, 222, 128, 0.3);
+  color: #4ade80;
+}
+
+.domain-chip.taken {
+  background: rgba(239, 68, 68, 0.1);
+  border-color: rgba(239, 68, 68, 0.3);
+  color: #ef4444;
+}
+
 @media (max-width: 480px) {
   .btn-primary, .btn-secondary {
     width: 100%;

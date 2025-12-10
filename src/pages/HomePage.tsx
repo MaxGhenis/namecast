@@ -1,36 +1,54 @@
 import { useState } from 'react'
 import '../styles/Home.css'
 
-// Mock evaluation data
-const mockEvaluation = {
-  name: 'Luminary',
-  overallScore: 84,
-  domain: { available: true, tld: '.com' },
-  social: {
-    twitter: true,
-    instagram: false,
-    linkedin: true,
-    status: 'partial'
-  },
-  trademark: { risk: 'low', conflicts: 0 },
-  pronunciation: { score: 92, difficulty: 'easy' },
-  international: { issues: 0, languages: 12 },
-  aiInsight: "Luminary evokes enlightenment, leadership, and innovation. The name suggests a guiding light or influential figure, making it ideal for consulting, education, or thought leadership brands. It has strong positive connotations across cultures and is memorable without being overused in the tech space."
+const API_URL = 'http://localhost:8000'
+
+interface EvaluationResult {
+  name: string
+  overall_score: number
+  domain_score: number
+  social_score: number
+  trademark_score: number
+  pronunciation_score: number
+  international_score: number
+  domains: Record<string, boolean>
+  social: Record<string, boolean>
+  trademark: { risk_level: string; matches: unknown[] }
+  pronunciation: { score: number; syllables: number; spelling_difficulty: string }
+  international: Record<string, { has_issue: boolean; meaning: string | null }>
+  perception: { evokes: string; industry_association: string[]; memorability: string; mission_alignment?: number }
 }
 
 export default function HomePage() {
-  const [brandName, setBrandName] = useState('Luminary')
-  const [showResults, setShowResults] = useState(false)
+  const [brandName, setBrandName] = useState('')
+  const [result, setResult] = useState<EvaluationResult | null>(null)
   const [isLoading, setIsLoading] = useState(false)
+  const [error, setError] = useState<string | null>(null)
 
-  const handleEvaluate = () => {
+  const handleEvaluate = async () => {
     if (!brandName.trim()) return
     setIsLoading(true)
-    // Simulate API call
-    setTimeout(() => {
+    setError(null)
+
+    try {
+      const response = await fetch(`${API_URL}/evaluate`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name: brandName }),
+      })
+
+      if (!response.ok) {
+        throw new Error('Evaluation failed')
+      }
+
+      const data = await response.json()
+      setResult(data)
+    } catch (err) {
+      setError('Could not connect to evaluation API. Make sure the server is running: uvicorn brandeval.api:app --reload')
+      console.error(err)
+    } finally {
       setIsLoading(false)
-      setShowResults(true)
-    }, 1200)
+    }
   }
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
@@ -38,7 +56,19 @@ export default function HomePage() {
   }
 
   // Calculate score ring offset (circumference = 2 * PI * 22 ≈ 138.2)
-  const scoreOffset = 138.2 - (138.2 * mockEvaluation.overallScore / 100)
+  const scoreOffset = result ? 138.2 - (138.2 * result.overall_score / 100) : 138.2
+
+  // Count available domains and social handles
+  const availableDomains = result ? Object.values(result.domains).filter(Boolean).length : 0
+  const totalDomains = result ? Object.keys(result.domains).length : 0
+  const availableSocial = result ? Object.values(result.social).filter(Boolean).length : 0
+  const totalSocial = result ? Object.keys(result.social).length : 0
+
+  // Count international issues
+  const intlIssues = result
+    ? Object.values(result.international).filter(v => v.has_issue).length
+    : 0
+  const intlLanguages = result ? Object.keys(result.international).length : 0
 
   return (
     <div className="home">
@@ -77,7 +107,8 @@ export default function HomePage() {
               value={brandName}
               onChange={(e) => {
                 setBrandName(e.target.value)
-                setShowResults(false)
+                setResult(null)
+                setError(null)
               }}
               onKeyDown={handleKeyDown}
               placeholder="Enter a brand name..."
@@ -92,23 +123,29 @@ export default function HomePage() {
             </button>
           </div>
 
-          {showResults && (
+          {error && (
+            <div className="eval-error">
+              {error}
+            </div>
+          )}
+
+          {result && (
             <div className="eval-results">
               <div className="eval-header">
-                <span className="eval-name">{mockEvaluation.name}</span>
+                <span className="eval-name">{result.name}</span>
                 <div className="eval-score">
                   <div className="score-ring">
                     <svg viewBox="0 0 48 48">
                       <circle className="score-ring-bg" cx="24" cy="24" r="22" />
                       <circle
-                        className={`score-ring-fill ${mockEvaluation.overallScore >= 80 ? 'success' : mockEvaluation.overallScore >= 60 ? 'gold' : ''}`}
+                        className={`score-ring-fill ${result.overall_score >= 80 ? 'success' : result.overall_score >= 60 ? 'gold' : ''}`}
                         cx="24"
                         cy="24"
                         r="22"
                         style={{ strokeDashoffset: scoreOffset }}
                       />
                     </svg>
-                    <span className="score-value">{mockEvaluation.overallScore}</span>
+                    <span className="score-value">{Math.round(result.overall_score)}</span>
                   </div>
                 </div>
               </div>
@@ -119,9 +156,9 @@ export default function HomePage() {
                     <circle cx="12" cy="12" r="10" />
                     <path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
                   </svg>
-                  <div className="metric-label">Domain</div>
-                  <div className={`metric-value ${mockEvaluation.domain.available ? 'available' : 'unavailable'}`}>
-                    {mockEvaluation.domain.available ? `${mockEvaluation.domain.tld} Available` : 'Taken'}
+                  <div className="metric-label">Domains</div>
+                  <div className={`metric-value ${availableDomains === totalDomains ? 'available' : availableDomains > 0 ? 'partial' : 'unavailable'}`}>
+                    {availableDomains}/{totalDomains} Available
                   </div>
                 </div>
 
@@ -130,8 +167,8 @@ export default function HomePage() {
                     <path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z" />
                   </svg>
                   <div className="metric-label">Social Handles</div>
-                  <div className={`metric-value ${mockEvaluation.social.status === 'partial' ? 'partial' : mockEvaluation.social.twitter ? 'available' : 'unavailable'}`}>
-                    2/3 Available
+                  <div className={`metric-value ${availableSocial === totalSocial ? 'available' : availableSocial > 0 ? 'partial' : 'unavailable'}`}>
+                    {availableSocial}/{totalSocial} Available
                   </div>
                 </div>
 
@@ -140,8 +177,8 @@ export default function HomePage() {
                     <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
                   </svg>
                   <div className="metric-label">Trademark</div>
-                  <div className={`metric-value ${mockEvaluation.trademark.risk === 'low' ? 'available' : 'partial'}`}>
-                    Low Risk
+                  <div className={`metric-value ${result.trademark.risk_level === 'low' ? 'available' : result.trademark.risk_level === 'medium' ? 'partial' : 'unavailable'}`}>
+                    {result.trademark.risk_level.charAt(0).toUpperCase() + result.trademark.risk_level.slice(1)} Risk
                   </div>
                 </div>
 
@@ -151,8 +188,8 @@ export default function HomePage() {
                     <path d="M19 10v2a7 7 0 0 1-14 0v-2M12 19v4M8 23h8" />
                   </svg>
                   <div className="metric-label">Pronunciation</div>
-                  <div className="metric-value available">
-                    {mockEvaluation.pronunciation.score}/100
+                  <div className={`metric-value ${result.pronunciation.score >= 7 ? 'available' : result.pronunciation.score >= 5 ? 'partial' : 'unavailable'}`}>
+                    {result.pronunciation.score.toFixed(1)}/10 ({result.pronunciation.syllables} syllables)
                   </div>
                 </div>
 
@@ -163,8 +200,8 @@ export default function HomePage() {
                     <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
                   </svg>
                   <div className="metric-label">International</div>
-                  <div className="metric-value available">
-                    {mockEvaluation.international.languages} Languages OK
+                  <div className={`metric-value ${intlIssues === 0 ? 'available' : 'unavailable'}`}>
+                    {intlIssues === 0 ? `${intlLanguages} Languages OK` : `${intlIssues} Issues Found`}
                   </div>
                 </div>
 
@@ -174,8 +211,20 @@ export default function HomePage() {
                   </svg>
                   <div className="metric-label">Memorability</div>
                   <div className="metric-value available">
-                    High
+                    {result.perception.memorability.charAt(0).toUpperCase() + result.perception.memorability.slice(1)}
                   </div>
+                </div>
+              </div>
+
+              {/* Domain Details */}
+              <div className="eval-details">
+                <h4>Domain Availability</h4>
+                <div className="domain-grid">
+                  {Object.entries(result.domains).map(([tld, available]) => (
+                    <span key={tld} className={`domain-chip ${available ? 'available' : 'taken'}`}>
+                      {result.name.toLowerCase()}{tld}
+                    </span>
+                  ))}
                 </div>
               </div>
 
@@ -190,7 +239,8 @@ export default function HomePage() {
                   <span className="ai-label">Brand Perception Insight</span>
                 </div>
                 <div className="ai-insight">
-                  {mockEvaluation.aiInsight}
+                  <strong>Evokes:</strong> {result.perception.evokes}<br />
+                  <strong>Industry Association:</strong> {result.perception.industry_association.join(', ')}
                 </div>
               </div>
             </div>

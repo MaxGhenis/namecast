@@ -27,6 +27,8 @@ dependencies = [
     "python-whois>=0.8",
     "anthropic>=0.18",
     "rich>=13.0",
+    "fastapi>=0.109",
+    "uvicorn>=0.27",
 ]
 
 [project.optional-dependencies]
