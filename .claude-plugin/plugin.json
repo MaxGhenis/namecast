@@ -3,23 +3,6 @@
   "version": "0.1.0",
   "description": "AI-powered brand name evaluation - check domains, social handles, trademarks, pronunciation, and brand perception",
   "homepage": "https://brandval.ai",
-  "skills": [
-    {
-      "name": "evaluate-brand",
-      "description": "Evaluate a brand name for availability, pronunciation, international appeal, and AI-powered perception analysis. Use this when the user wants to evaluate potential brand names, company names, or product names.",
-      "path": "skills/evaluate-brand.md"
-    },
-    {
-      "name": "generate-names",
-      "description": "Generate brand name candidates based on company mission, values, and target market. Use this when the user needs help brainstorming brand name ideas.",
-      "path": "skills/generate-names.md"
-    },
-    {
-      "name": "compare-names",
-      "description": "Compare multiple brand name candidates side-by-side across all evaluation criteria. Use this when the user has several name options and wants to choose the best one.",
-      "path": "skills/compare-names.md"
-    }
-  ],
   "commands": [
     {
       "name": "evaluate",
