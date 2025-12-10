@@ -386,6 +386,18 @@ export default function HomePage() {
           <a href="/thesis" className="btn-secondary">Read the Thesis</a>
         </div>
       </section>
+
+      {/* Footer */}
+      <footer className="footer">
+        <p className="footer-tagline">Open source brand name intelligence</p>
+        <div className="footer-links">
+          <a href="https://github.com/MaxGhenis/namecast">GitHub</a>
+          <span className="footer-sep">·</span>
+          <a href="https://pypi.org/project/namecast/">Python Package</a>
+          <span className="footer-sep">·</span>
+          <a href="https://github.com/MaxGhenis/namecast#claude-code-plugin">Claude Code Plugin</a>
+        </div>
+      </footer>
     </div>
   )
 }

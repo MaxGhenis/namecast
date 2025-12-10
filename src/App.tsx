@@ -25,7 +25,7 @@ function App() {
               </a>
               <div className="nav-links">
                 <a href={`${basename}/thesis`}>Thesis</a>
-                <a href="https://github.com">GitHub</a>
+                <a href="https://github.com/MaxGhenis/namecast">GitHub</a>
                 <a href="mailto:hello@namecast.ai">Contact</a>
               </div>
             </div>
