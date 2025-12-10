@@ -215,15 +215,53 @@ class BrandEvaluator:
 
     def find_similar_companies(self, name: str) -> SimilarCompaniesResult:
         """Find similar-sounding or confusingly similar existing companies."""
-        # Check if we have an API key for real analysis
+        # Always start with static check for speed
+        static_result = self._find_similar_static(name)
+
+        # If we have an API key, enhance with LLM analysis
         if os.environ.get("ANTHROPIC_API_KEY"):
             try:
-                return self._find_similar_with_llm(name)
+                llm_result = self._find_similar_with_llm(name)
+                # Merge results, preferring LLM findings but keeping static matches
+                return self._merge_similar_results(static_result, llm_result)
             except Exception as e:
                 print(f"LLM similar companies search failed: {e}")
 
-        # Fallback to static database of well-known companies
-        return self._find_similar_static(name)
+        return static_result
+
+    def _merge_similar_results(
+        self, static: SimilarCompaniesResult, llm: SimilarCompaniesResult
+    ) -> SimilarCompaniesResult:
+        """Merge static and LLM similarity results."""
+        # Combine matches, avoiding duplicates
+        seen_names = set()
+        merged_matches = []
+
+        # LLM results first (usually more comprehensive)
+        for match in llm.matches:
+            name_lower = match.name.lower()
+            if name_lower not in seen_names:
+                seen_names.add(name_lower)
+                merged_matches.append(match)
+
+        # Add static matches not found by LLM
+        for match in static.matches:
+            name_lower = match.name.lower()
+            if name_lower not in seen_names:
+                seen_names.add(name_lower)
+                merged_matches.append(match)
+
+        # Sort by similarity and take top 5
+        merged_matches.sort(key=lambda x: x.similarity_score, reverse=True)
+        merged_matches = merged_matches[:5]
+
+        # Use higher risk level
+        risk_order = {"low": 0, "medium": 1, "high": 2}
+        confusion_risk = static.confusion_risk
+        if risk_order.get(llm.confusion_risk, 0) > risk_order.get(static.confusion_risk, 0):
+            confusion_risk = llm.confusion_risk
+
+        return SimilarCompaniesResult(matches=merged_matches, confusion_risk=confusion_risk)
 
     def _find_similar_static(self, name: str) -> SimilarCompaniesResult:
         """Check against a static database of well-known companies."""
@@ -326,29 +364,50 @@ class BrandEvaluator:
         from anthropic import Anthropic
         client = Anthropic()
 
-        prompt = f"""Find existing companies with names similar to "{name}".
+        prompt = f"""Find existing companies with names that could be confused with "{name}".
 
-Consider:
-1. Phonetically similar names (sound alike)
-2. Visually similar names (look alike when written)
-3. Names with similar word roots or morphemes
-4. Names that could cause brand confusion
+Consider ALL types of similarity:
 
-For each similar company found, provide:
-- Company name
-- Industry
-- Similarity score (0.0-1.0)
-- Reason for similarity
+1. **Phonetic similarity** - names that sound alike when spoken
+   - Example: "Lyft" ~ "Lift", "Figma" ~ "Sigma"
+
+2. **Visual similarity** - names that look alike when written
+   - Example: "Stripe" ~ "Stripey", "Notion" ~ "Motion"
+
+3. **Semantic similarity** - names with similar meanings or concepts
+   - Example: "PayFlow" ~ "Stripe" (both evoke payment/flow)
+   - Example: "CloudBase" ~ "Firebase" (both evoke cloud/base)
+
+4. **Morphological similarity** - shared prefixes, suffixes, or word parts
+   - Example: "Datadog" ~ "Databricks" (shared "Data-")
+   - Example: "Mailchimp" ~ "Mailgun" (shared "Mail-")
+
+5. **Industry confusion** - names that suggest the same product category
+   - Example: "ChatBot AI" ~ "ChatGPT" (both chat + AI)
+
+Focus on REAL, existing companies that someone might confuse with "{name}".
+Include well-known tech companies, startups, and established brands.
+
+For each similar company, provide:
+- name: The company's actual name
+- industry: Their primary industry/product
+- similarity_score: 0.0-1.0 (how likely to cause confusion)
+- reason: Specific type of similarity
 
 Respond in JSON format:
 {{
     "matches": [
-        {{"name": "CompanyName", "industry": "industry", "similarity_score": 0.7, "reason": "phonetically similar"}}
+        {{"name": "CompanyName", "industry": "their industry", "similarity_score": 0.7, "reason": "phonetically similar - both end in '-ify'"}}
     ],
     "confusion_risk": "low|medium|high"
 }}
 
-Only include companies with similarity_score > 0.5. Respond ONLY with valid JSON."""
+Guidelines for confusion_risk:
+- "high": Very similar to a well-known company, or multiple close matches
+- "medium": Moderately similar to known companies, some confusion possible
+- "low": Only loose similarity, minimal confusion risk
+
+Only include companies with similarity_score > 0.4. Respond ONLY with valid JSON, no markdown."""
 
         response = client.messages.create(
             model="claude-sonnet-4-20250514",
