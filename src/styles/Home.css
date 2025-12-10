@@ -1003,6 +1003,67 @@
 }
 
 /* ============================================
+   BRAND SCOPE & TAGLINE STYLES
+   ============================================ */
+
+.scope-badge {
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.2), rgba(6, 182, 212, 0.2));
+  border-color: rgba(99, 102, 241, 0.3);
+}
+
+.scope-warning {
+  display: inline-block;
+  margin-left: var(--space-sm);
+  padding: var(--space-xs) var(--space-sm);
+  background: rgba(245, 158, 11, 0.15);
+  border: 1px solid rgba(245, 158, 11, 0.3);
+  border-radius: var(--radius-md);
+  font-size: 0.85rem;
+  color: var(--color-gold);
+}
+
+.tagline-badge {
+  background: linear-gradient(135deg, rgba(245, 158, 11, 0.2), rgba(6, 182, 212, 0.2));
+  border-color: rgba(245, 158, 11, 0.3);
+}
+
+.tagline-suggestions {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+
+.tagline-item {
+  font-family: var(--font-satoshi);
+  font-size: 1rem;
+  line-height: 1.6;
+  color: var(--color-text-secondary);
+  padding: var(--space-sm) var(--space-md);
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  font-style: italic;
+  position: relative;
+  transition: all var(--duration-fast);
+}
+
+.tagline-item:hover {
+  border-color: var(--color-accent-dim);
+  background: var(--color-bg-elevated);
+}
+
+.tagline-item::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  background: linear-gradient(180deg, var(--color-gold), var(--color-accent));
+  border-radius: var(--radius-md) 0 0 var(--radius-md);
+}
+
+/* ============================================
    MODE TOGGLE
    ============================================ */
 

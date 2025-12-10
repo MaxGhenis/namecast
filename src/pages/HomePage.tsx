@@ -11,12 +11,16 @@ interface EvaluationResult {
   trademark_score: number
   pronunciation_score: number
   international_score: number
+  brand_scope_score?: number
+  tagline_score?: number
   domains: Record<string, boolean>
   social: Record<string, boolean>
   trademark: { risk_level: string; matches: unknown[] }
   pronunciation: { score: number; syllables: number; spelling_difficulty: string }
   international: Record<string, { has_issue: boolean; meaning: string | null }>
   perception: { evokes: string; industry_association: string[]; memorability: string; mission_alignment?: number }
+  brand_scope?: { narrowness: number; expansion_potential: number; vision_alignment: number; assessment: string }
+  taglines?: string[]
 }
 
 interface NameCandidate {
@@ -433,6 +437,20 @@ export default function HomePage() {
                     {result.perception.memorability.charAt(0).toUpperCase() + result.perception.memorability.slice(1)}
                   </div>
                 </div>
+
+                {result.brand_scope && (
+                  <div className="eval-metric">
+                    <svg className="metric-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                      <circle cx="12" cy="12" r="3" />
+                      <circle cx="12" cy="12" r="8" opacity="0.5" />
+                      <path d="M12 2v2M12 20v2M2 12h2M20 12h2" />
+                    </svg>
+                    <div className="metric-label">Brand Scope</div>
+                    <div className={`metric-value ${result.brand_scope.expansion_potential >= 7 ? 'available' : result.brand_scope.expansion_potential >= 4 ? 'partial' : 'unavailable'}`}>
+                      {result.brand_scope.expansion_potential >= 7 ? 'Expansive' : result.brand_scope.expansion_potential >= 4 ? 'Moderate' : 'Narrow'}
+                    </div>
+                  </div>
+                )}
               </div>
 
               {/* Domain Details */}
@@ -462,6 +480,49 @@ export default function HomePage() {
                   <strong>Industry Association:</strong> {result.perception.industry_association.join(', ')}
                 </div>
               </div>
+
+              {result.brand_scope && (
+                <div className="eval-ai-section">
+                  <div className="ai-header">
+                    <span className="ai-badge scope-badge">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                        <circle cx="12" cy="12" r="3" />
+                        <circle cx="12" cy="12" r="8" opacity="0.5" />
+                      </svg>
+                      Brand Scope
+                    </span>
+                    <span className="ai-label">Expansion Potential</span>
+                  </div>
+                  <div className="ai-insight">
+                    <strong>Assessment:</strong> {result.brand_scope.assessment}<br />
+                    <strong>Expansion Score:</strong> {result.brand_scope.expansion_potential}/10
+                    {result.brand_scope.expansion_potential < 5 && (
+                      <span className="scope-warning"> ⚠️ This name may limit future growth</span>
+                    )}
+                  </div>
+                </div>
+              )}
+
+              {result.taglines && result.taglines.length > 0 && (
+                <div className="eval-ai-section">
+                  <div className="ai-header">
+                    <span className="ai-badge tagline-badge">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+                      </svg>
+                      Taglines
+                    </span>
+                    <span className="ai-label">Suggested Taglines</span>
+                  </div>
+                  <div className="tagline-suggestions">
+                    {result.taglines.map((tagline, i) => (
+                      <div key={i} className="tagline-item">
+                        "{tagline}"
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
 
               <div className="eval-disclaimer">
                 This tool provides general information only and does not constitute legal advice.
@@ -546,6 +607,34 @@ export default function HomePage() {
             <p>
               LLM-powered perception oracles. "What will people think?"
               "Does it align with our mission?" Foresight at scale.
+            </p>
+          </div>
+
+          <div className="feature-card">
+            <div className="feature-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <circle cx="12" cy="12" r="3" />
+                <circle cx="12" cy="12" r="8" opacity="0.5" />
+                <path d="M12 2v2M12 20v2M2 12h2M20 12h2" />
+              </svg>
+            </div>
+            <h3>Brand Scope Analysis</h3>
+            <p>
+              Penalizes names that box you in. "TaxGraph" limits you to tax.
+              "Amazon" allows unlimited growth. Know before you commit.
+            </p>
+          </div>
+
+          <div className="feature-card">
+            <div className="feature-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+              </svg>
+            </div>
+            <h3>Tagline Generation</h3>
+            <p>
+              AI-generated taglines that complement your name. Perfect for
+              names that need explanation. "Society, in silico."
             </p>
           </div>
 
