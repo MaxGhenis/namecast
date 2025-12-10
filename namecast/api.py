@@ -4,7 +4,7 @@ from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 
-from brandval.evaluator import BrandEvaluator
+from namecast.evaluator import BrandEvaluator
 
 
 app = FastAPI(

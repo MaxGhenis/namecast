@@ -454,7 +454,7 @@ Only include companies with similarity_score > 0.4. Respond ONLY with valid JSON
         # Check if we have an API key for real analysis
         if os.environ.get("ANTHROPIC_API_KEY"):
             try:
-                from brandval.perception import analyze_with_personas
+                from namecast.perception import analyze_with_personas
                 analysis = analyze_with_personas(name, mission, num_personas=5)
                 return PerceptionResult(
                     evokes=analysis.evokes,

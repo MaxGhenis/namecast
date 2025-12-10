@@ -6,7 +6,7 @@ from rich.table import Table
 from rich.panel import Panel
 from rich.text import Text
 
-from brandval.evaluator import BrandEvaluator
+from namecast.evaluator import BrandEvaluator
 
 
 console = Console()

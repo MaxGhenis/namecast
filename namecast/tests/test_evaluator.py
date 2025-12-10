@@ -1,33 +1,41 @@
-"""Tests for the brand name evaluator."""
+"""Tests for the brand name oracle."""
 
 import pytest
 from unittest.mock import Mock, patch, AsyncMock
-from brandval.evaluator import BrandEvaluator, EvaluationResult
+from namecast.evaluator import BrandEvaluator, EvaluationResult
 
 
 class TestBrandEvaluator:
     """Tests for the main BrandEvaluator class."""
 
-    def test_evaluate_returns_evaluation_result(self):
+    @patch("namecast.evaluator.whois_lookup")
+    def test_evaluate_returns_evaluation_result(self, mock_whois):
         """evaluate() should return an EvaluationResult dataclass."""
+        mock_whois.return_value = None
         evaluator = BrandEvaluator()
         result = evaluator.evaluate("TestBrand")
         assert isinstance(result, EvaluationResult)
 
-    def test_evaluate_includes_brand_name(self):
+    @patch("namecast.evaluator.whois_lookup")
+    def test_evaluate_includes_brand_name(self, mock_whois):
         """Result should include the evaluated brand name."""
+        mock_whois.return_value = None
         evaluator = BrandEvaluator()
         result = evaluator.evaluate("Acme")
         assert result.name == "Acme"
 
-    def test_evaluate_includes_overall_score(self):
+    @patch("namecast.evaluator.whois_lookup")
+    def test_evaluate_includes_overall_score(self, mock_whois):
         """Result should include an overall score 0-100."""
+        mock_whois.return_value = None
         evaluator = BrandEvaluator()
         result = evaluator.evaluate("TestBrand")
         assert 0 <= result.overall_score <= 100
 
-    def test_evaluate_includes_all_subscores(self):
+    @patch("namecast.evaluator.whois_lookup")
+    def test_evaluate_includes_all_subscores(self, mock_whois):
         """Result should include all subscore categories."""
+        mock_whois.return_value = None
         evaluator = BrandEvaluator()
         result = evaluator.evaluate("TestBrand")
         assert hasattr(result, "domain_score")
@@ -40,14 +48,18 @@ class TestBrandEvaluator:
 class TestDomainChecker:
     """Tests for domain availability checking."""
 
-    def test_check_domains_returns_dict(self):
+    @patch("namecast.evaluator.whois_lookup")
+    def test_check_domains_returns_dict(self, mock_whois):
         """check_domains() should return a dict of TLD -> availability."""
+        mock_whois.return_value = None
         evaluator = BrandEvaluator()
         result = evaluator.check_domains("testbrand")
         assert isinstance(result, dict)
 
-    def test_check_domains_includes_common_tlds(self):
+    @patch("namecast.evaluator.whois_lookup")
+    def test_check_domains_includes_common_tlds(self, mock_whois):
         """Should check .com, .io, .co, .ai, .app by default."""
+        mock_whois.return_value = None
         evaluator = BrandEvaluator()
         result = evaluator.check_domains("testbrand")
         assert ".com" in result
@@ -56,14 +68,16 @@ class TestDomainChecker:
         assert ".ai" in result
         assert ".app" in result
 
-    def test_check_domains_returns_booleans(self):
+    @patch("namecast.evaluator.whois_lookup")
+    def test_check_domains_returns_booleans(self, mock_whois):
         """Each TLD should map to a boolean (available or not)."""
+        mock_whois.return_value = None
         evaluator = BrandEvaluator()
         result = evaluator.check_domains("testbrand")
         for tld, available in result.items():
             assert isinstance(available, bool), f"{tld} should be bool, got {type(available)}"
 
-    @patch("brandval.evaluator.whois_lookup")
+    @patch("namecast.evaluator.whois_lookup")
     def test_domain_available_when_not_registered(self, mock_whois):
         """Domain should be available when WHOIS returns no registration."""
         mock_whois.return_value = None  # No registration found
@@ -71,7 +85,7 @@ class TestDomainChecker:
         result = evaluator.check_domains("xyzuniquename12345")
         assert result[".com"] is True
 
-    @patch("brandval.evaluator.whois_lookup")
+    @patch("namecast.evaluator.whois_lookup")
     def test_domain_unavailable_when_registered(self, mock_whois):
         """Domain should be unavailable when WHOIS returns registration."""
         mock_whois.return_value = {"domain_name": "google.com", "creation_date": "1997-09-15"}
@@ -99,12 +113,14 @@ class TestSocialChecker:
         assert "tiktok" in result
         assert "github" in result
 
-    def test_check_social_returns_booleans(self):
-        """Each platform should map to a boolean."""
+    def test_check_social_returns_social_handle_results(self):
+        """Each platform should map to a SocialHandleResult."""
+        from namecast.evaluator import SocialHandleResult
         evaluator = BrandEvaluator()
         result = evaluator.check_social("testbrand")
-        for platform, available in result.items():
-            assert isinstance(available, bool)
+        for platform, handle_result in result.items():
+            assert isinstance(handle_result, SocialHandleResult)
+            assert isinstance(handle_result.exact_available, bool)
 
 
 class TestTrademarkChecker:
@@ -216,8 +232,10 @@ class TestAIPerception:
 class TestScorecard:
     """Tests for the unified scorecard output."""
 
-    def test_scorecard_as_dict(self):
+    @patch("namecast.evaluator.whois_lookup")
+    def test_scorecard_as_dict(self, mock_whois):
         """Should be able to export result as dict."""
+        mock_whois.return_value = None
         evaluator = BrandEvaluator()
         result = evaluator.evaluate("TestBrand")
         d = result.to_dict()
@@ -225,8 +243,10 @@ class TestScorecard:
         assert "name" in d
         assert "overall_score" in d
 
-    def test_scorecard_as_json(self):
+    @patch("namecast.evaluator.whois_lookup")
+    def test_scorecard_as_json(self, mock_whois):
         """Should be able to export result as JSON string."""
+        mock_whois.return_value = None
         import json
         evaluator = BrandEvaluator()
         result = evaluator.evaluate("TestBrand")
@@ -234,8 +254,10 @@ class TestScorecard:
         parsed = json.loads(json_str)
         assert parsed["name"] == "TestBrand"
 
-    def test_scorecard_as_markdown(self):
+    @patch("namecast.evaluator.whois_lookup")
+    def test_scorecard_as_markdown(self, mock_whois):
         """Should be able to export result as markdown table."""
+        mock_whois.return_value = None
         evaluator = BrandEvaluator()
         result = evaluator.evaluate("TestBrand")
         md = result.to_markdown()
@@ -246,28 +268,34 @@ class TestScorecard:
 class TestCLI:
     """Tests for the command-line interface."""
 
-    def test_cli_with_single_name(self):
+    @patch("namecast.evaluator.whois_lookup")
+    def test_cli_with_single_name(self, mock_whois):
         """CLI should accept a single brand name."""
-        from brandval.cli import main
+        mock_whois.return_value = None
+        from namecast.cli import main
         from click.testing import CliRunner
         runner = CliRunner()
         result = runner.invoke(main, ["Acme"])
         assert result.exit_code == 0
         assert "Acme" in result.output
 
-    def test_cli_with_mission_flag(self):
+    @patch("namecast.evaluator.whois_lookup")
+    def test_cli_with_mission_flag(self, mock_whois):
         """CLI should accept --mission flag."""
-        from brandval.cli import main
+        mock_whois.return_value = None
+        from namecast.cli import main
         from click.testing import CliRunner
         runner = CliRunner()
         result = runner.invoke(main, ["Luminary", "--mission", "Education platform"])
         assert result.exit_code == 0
         assert "Mission Alignment" in result.output
 
-    def test_cli_json_output(self):
+    @patch("namecast.evaluator.whois_lookup")
+    def test_cli_json_output(self, mock_whois):
         """CLI should support --json flag for JSON output."""
+        mock_whois.return_value = None
         import json
-        from brandval.cli import main
+        from namecast.cli import main
         from click.testing import CliRunner
         runner = CliRunner()
         result = runner.invoke(main, ["Acme", "--json"])
@@ -275,9 +303,11 @@ class TestCLI:
         parsed = json.loads(result.output)
         assert parsed["name"] == "Acme"
 
-    def test_cli_compare_multiple_names(self):
+    @patch("namecast.evaluator.whois_lookup")
+    def test_cli_compare_multiple_names(self, mock_whois):
         """CLI should support comparing multiple names."""
-        from brandval.cli import main
+        mock_whois.return_value = None
+        from namecast.cli import main
         from click.testing import CliRunner
         runner = CliRunner()
         result = runner.invoke(main, ["--compare", "Acme", "Globex", "Initech"])
