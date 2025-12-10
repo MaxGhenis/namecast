@@ -1,4 +1,4 @@
-"""FastAPI backend for BrandEval."""
+"""FastAPI backend for Namecast."""
 
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
@@ -8,8 +8,8 @@ from brandval.evaluator import BrandEvaluator
 
 
 app = FastAPI(
-    title="BrandEval API",
-    description="AI-powered brand name evaluation",
+    title="Namecast API",
+    description="AI-powered brand name oracle",
     version="0.1.0",
 )
 
@@ -37,7 +37,7 @@ class CompareRequest(BaseModel):
 
 @app.get("/")
 def root():
-    return {"status": "ok", "service": "brandval-api"}
+    return {"status": "ok", "service": "namecast-api"}
 
 
 @app.post("/evaluate")

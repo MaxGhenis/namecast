@@ -1,4 +1,4 @@
-"""Command-line interface for BrandEval."""
+"""Command-line interface for Namecast."""
 
 import click
 from rich.console import Console
@@ -18,15 +18,15 @@ console = Console()
 @click.option("--json", "output_json", is_flag=True, help="Output as JSON")
 @click.option("--compare", is_flag=True, help="Compare multiple names side-by-side")
 def main(names: tuple[str, ...], mission: str | None, output_json: bool, compare: bool):
-    """Evaluate brand names for availability, pronunciation, and perception.
+    """Forecast brand name success - availability, pronunciation, and perception.
 
     Examples:
 
-        brandval Acme
+        namecast Acme
 
-        brandval Acme --mission "Industrial supply company"
+        namecast Acme --mission "Industrial supply company"
 
-        brandval --compare Acme Globex Initech
+        namecast --compare Acme Globex Initech
     """
     evaluator = BrandEvaluator()
 

@@ -39,11 +39,12 @@ export default function ThesisPage() {
       <nav className="thesis-top-nav">
         <a href="/" className="thesis-logo">
           <svg className="thesis-logo-icon" viewBox="0 0 32 32" fill="none">
-            <rect x="2" y="2" width="28" height="28" rx="6" stroke="currentColor" strokeWidth="2"/>
-            <path d="M8 16h16M16 8v16" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
-            <circle cx="16" cy="16" r="4" fill="currentColor"/>
+            <circle cx="16" cy="16" r="12" stroke="currentColor" strokeWidth="2"/>
+            <circle cx="16" cy="16" r="5" fill="currentColor"/>
+            <path d="M16 4v4M16 24v4M4 16h4M24 16h4" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+            <path d="M8 8l3 3M21 21l3 3M8 24l3-3M21 11l3-3" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" opacity="0.5"/>
           </svg>
-          brandval
+          Namecast
         </a>
       </nav>
 
@@ -70,7 +71,7 @@ export default function ThesisPage() {
           We're building the unified scorecard.
         </p>
         <p className="thesis-meta">
-          December 2024 · BrandVal
+          December 2024 · Namecast
         </p>
       </header>
 
@@ -138,7 +139,7 @@ export default function ThesisPage() {
                   <th>Namify</th>
                   <th>Squadhelp</th>
                   <th>KnowEm</th>
-                  <th className="highlight-col">BrandVal</th>
+                  <th className="highlight-col">Namecast</th>
                 </tr>
               </thead>
               <tbody>
@@ -283,9 +284,9 @@ export default function ThesisPage() {
           <h2>The Product</h2>
 
           <p>
-            BrandVal is a unified brand name evaluation platform. Enter a name,
-            get a comprehensive scorecard covering everything from domain availability
-            to AI-powered perception analysis.
+            Namecast is the brand name oracle. Enter a name,
+            receive a comprehensive forecast covering everything from domain availability
+            to AI-powered perception prophecy.
           </p>
 
           <div className="product-features">
@@ -387,11 +388,11 @@ export default function ThesisPage() {
 
       {/* CTA */}
       <section className="thesis-cta">
-        <h2>Ready to Evaluate?</h2>
-        <p>Try BrandVal free. No signup required for your first evaluation.</p>
+        <h2>Ready to Forecast?</h2>
+        <p>Try Namecast free. No signup required for your first prophecy.</p>
         <div className="cta-buttons">
-          <a href="/" className="btn-primary">Try It Free</a>
-          <a href="mailto:hello@brandval.ai" className="btn-secondary">Get in Touch</a>
+          <a href="/" className="btn-primary">Consult the Oracle</a>
+          <a href="mailto:hello@namecast.ai" className="btn-secondary">Get in Touch</a>
         </div>
       </section>
     </div>

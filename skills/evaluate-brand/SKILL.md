@@ -1,23 +1,23 @@
 ---
-name: Brand Name Evaluation
-description: Use this skill when the user wants to evaluate a brand name, company name, or product name. Checks domain availability, social handles, trademarks, pronunciation, international meanings, similar companies, and AI perception analysis.
+name: Brand Name Oracle
+description: Use this skill when the user wants to forecast a brand name's success. Checks domain availability, social handles, trademarks, pronunciation, international meanings, similar companies, and AI perception prophecy.
 version: 0.1.0
 ---
 
-# Brand Name Evaluation Skill
+# Brand Name Oracle Skill
 
-Evaluate brand names comprehensively across multiple dimensions. This skill provides a structured approach to brand name evaluation.
+Forecast brand name success comprehensively across multiple dimensions. This skill provides a structured approach to brand name prophecy.
 
 ## When to Use
 
-- User asks to evaluate a potential brand/company/product name
+- User asks to forecast a potential brand/company/product name's success
 - User wants to check if a name is "good" or "available"
 - User is deciding between name options
-- User wants feedback on a name they're considering
+- User wants oracle insight on a name they're considering
 
-## Evaluation Framework
+## Forecasting Framework
 
-For each brand name, evaluate across these dimensions:
+For each brand name, forecast across these dimensions:
 
 ### 1. Domain Availability (Check these TLDs)
 - .com (most important)

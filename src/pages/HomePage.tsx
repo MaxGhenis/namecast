@@ -44,7 +44,7 @@ export default function HomePage() {
       const data = await response.json()
       setResult(data)
     } catch (err) {
-      setError('Could not connect to evaluation API. Make sure the server is running: uvicorn brandeval.api:app --reload')
+      setError('Could not connect to evaluation API. Make sure the server is running: uvicorn namecast.api:app --reload')
       console.error(err)
     } finally {
       setIsLoading(false)
@@ -75,16 +75,16 @@ export default function HomePage() {
       {/* Hero Section */}
       <section className="hero">
         <div className="hero-content">
-          <div className="hero-badge">Brand Intelligence Platform</div>
+          <div className="hero-badge">Brand Name Oracle</div>
           <h1>
-            <span className="gradient-text">Evaluate Names</span>
+            <span className="gradient-text">Forecast Your Name's</span>
             <br />
-            <span className="highlight">Before You Commit</span>
+            <span className="highlight">Future Success</span>
           </h1>
           <p className="hero-subtitle">
-            Domain availability. Social handles. Trademark risk. Pronunciation.
-            International appeal. AI-powered brand perception analysis.
-            All in one automated scorecard.
+            See how people will perceive your brand before you launch.
+            Domain availability. Social handles. Trademark risk.
+            AI-powered perception forecasting. All in one oracle.
           </p>
           <div className="hero-cta">
             <a href="#demo" className="btn-primary">Try It Free</a>
@@ -250,10 +250,10 @@ export default function HomePage() {
 
       {/* Features Section */}
       <section className="features">
-        <h2>Complete Brand Intelligence</h2>
+        <h2>The Complete Name Oracle</h2>
         <p>
-          Everything you need to evaluate a brand name before committing.
-          Automated checks that would take hours, done in seconds.
+          Forecast every dimension of your brand name's future.
+          Automated prophecies that would take hours, delivered in seconds.
         </p>
         <div className="features-grid">
           <div className="feature-card">
@@ -318,10 +318,10 @@ export default function HomePage() {
                 <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" />
               </svg>
             </div>
-            <h3>AI Perception Analysis</h3>
+            <h3>AI Perception Forecasting</h3>
             <p>
-              LLM-powered brand perception testing. "What does this name evoke?"
-              "Does it align with our mission?" Automated at scale.
+              LLM-powered perception oracles. "What will people think?"
+              "Does it align with our mission?" Foresight at scale.
             </p>
           </div>
 
@@ -350,26 +350,26 @@ export default function HomePage() {
         <div className="steps">
           <div className="step">
             <div className="step-number">1</div>
-            <h3>Enter Names</h3>
+            <h3>Cast Your Names</h3>
             <p>
-              Input your brand name candidates or let AI generate suggestions
-              based on your company's mission and values.
+              Enter your brand name candidates. Let the oracle receive
+              your naming intentions and prepare its vision.
             </p>
           </div>
           <div className="step">
             <div className="step-number">2</div>
-            <h3>Run Evaluation</h3>
+            <h3>Receive the Forecast</h3>
             <p>
-              Our system checks domains, social handles, trademarks, pronunciation,
-              and runs AI perception analysis automatically.
+              Our oracle checks domains, social handles, trademarks, pronunciation,
+              and forecasts how people will perceive each name.
             </p>
           </div>
           <div className="step">
             <div className="step-number">3</div>
-            <h3>Compare & Decide</h3>
+            <h3>Choose Your Destiny</h3>
             <p>
               Review the unified scorecard, compare candidates side-by-side,
-              and make data-driven naming decisions.
+              and choose the name that's destined for success.
             </p>
           </div>
         </div>
@@ -377,12 +377,12 @@ export default function HomePage() {
 
       {/* CTA */}
       <section className="cta">
-        <h2>Name Your Brand with Confidence</h2>
+        <h2>See Your Name's Future</h2>
         <p>
-          Stop guessing. Start evaluating. Get the full picture before you commit.
+          Stop guessing. Start forecasting. Know your name's destiny before you commit.
         </p>
         <div className="cta-buttons">
-          <a href="#demo" className="btn-primary">Try It Free</a>
+          <a href="#demo" className="btn-primary">Consult the Oracle</a>
           <a href="/thesis" className="btn-secondary">Read the Thesis</a>
         </div>
       </section>

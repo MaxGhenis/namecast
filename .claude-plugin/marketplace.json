@@ -1,13 +1,13 @@
 {
-  "name": "brandval",
+  "name": "namecast",
   "owner": {
     "name": "maxghenis"
   },
   "plugins": [
     {
-      "name": "brandval",
+      "name": "namecast",
       "source": "./",
-      "description": "AI-powered brand name evaluation",
+      "description": "AI-powered brand name oracle",
       "version": "0.1.0"
     }
   ]

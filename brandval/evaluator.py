@@ -1,4 +1,4 @@
-"""Brand name evaluator - core evaluation logic."""
+"""Brand name oracle - core forecasting logic."""
 
 from dataclasses import dataclass, field, asdict
 from typing import Optional

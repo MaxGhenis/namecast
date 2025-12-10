@@ -1,12 +1,12 @@
 ---
-name: Brand Name Generation
-description: Use this skill when the user wants to brainstorm or generate brand name ideas for a company, product, or project.
+name: Brand Name Divination
+description: Use this skill when the user wants to divine or generate brand name ideas for a company, product, or project.
 version: 0.1.0
 ---
 
-# Brand Name Generation Skill
+# Brand Name Divination Skill
 
-Generate creative brand name candidates based on company context, mission, and target market.
+Divine creative brand name candidates based on company context, mission, and target market.
 
 ## When to Use
 

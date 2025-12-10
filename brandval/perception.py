@@ -1,4 +1,4 @@
-"""AI-powered brand perception analysis with multiple personas."""
+"""AI-powered brand perception forecasting with multiple personas."""
 
 import os
 import json
@@ -73,10 +73,10 @@ def analyze_with_personas(
     num_personas: int = 5,
 ) -> PerceptionAnalysis:
     """
-    Analyze brand perception using multiple AI personas.
+    Forecast brand perception using multiple AI personas.
 
-    Similar to ExpectedParrot's approach - get diverse perspectives
-    on how different demographics perceive the brand name.
+    Get diverse oracle predictions on how different demographics
+    will perceive the brand name.
     """
     client = Anthropic()
     responses = []

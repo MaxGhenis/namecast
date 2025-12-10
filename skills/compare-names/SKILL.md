@@ -1,12 +1,12 @@
 ---
 name: Brand Name Comparison
-description: Use this skill when the user wants to compare multiple brand name options side-by-side to decide which is best.
+description: Use this skill when the user wants to compare multiple brand name fates side-by-side to divine which is destined for success.
 version: 0.1.0
 ---
 
 # Brand Name Comparison Skill
 
-Compare multiple brand name candidates side-by-side to help users choose the best option.
+Compare multiple brand name candidates side-by-side to help users divine the best destiny.
 
 ## When to Use
 

@@ -1,8 +1,8 @@
 {
-  "name": "brandval",
+  "name": "namecast",
   "version": "0.1.0",
-  "description": "AI-powered brand name evaluation - check domains, social handles, trademarks, pronunciation, and brand perception",
-  "homepage": "https://brandval.ai",
+  "description": "AI-powered brand name oracle - forecast domains, social handles, trademarks, pronunciation, and perception",
+  "homepage": "https://namecast.ai",
   "commands": [
     {
       "name": "evaluate",
