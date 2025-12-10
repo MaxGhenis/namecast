@@ -1,12 +1,17 @@
 {
   "name": "namecast",
-  "version": "0.1.0",
-  "description": "AI-powered brand name oracle - forecast domains, social handles, trademarks, pronunciation, and perception",
-  "homepage": "https://namecast.ai",
+  "version": "0.2.0",
+  "description": "AI-powered brand name oracle - generate, filter, and evaluate brand names with domain checks, social handles, similar companies, and perception analysis",
+  "homepage": "https://github.com/MaxGhenis/namecast",
   "commands": [
     {
+      "name": "find",
+      "description": "Generate and evaluate brand names: /find <project description>",
+      "path": "commands/find.md"
+    },
+    {
       "name": "evaluate",
-      "description": "Evaluate a brand name: /evaluate <name>",
+      "description": "Evaluate a single brand name: /evaluate <name>",
       "path": "commands/evaluate.md"
     }
   ],
