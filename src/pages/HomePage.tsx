@@ -114,7 +114,6 @@ export default function HomePage() {
           </p>
           <div className="hero-cta">
             <a href="#demo" className="btn-primary">Try It Free</a>
-            <a href="/thesis" className="btn-secondary">Read the Thesis</a>
           </div>
         </div>
       </section>
@@ -465,7 +464,6 @@ export default function HomePage() {
         </p>
         <div className="cta-buttons">
           <a href="#demo" className="btn-primary">Consult the Oracle</a>
-          <a href="/thesis" className="btn-secondary">Read the Thesis</a>
         </div>
       </section>
 
