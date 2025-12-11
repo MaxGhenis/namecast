@@ -89,7 +89,7 @@ export default function ThesisPage() {
           <div className="problem-examples">
             <div className="problem-example">
               <h4>Founders</h4>
-              <p>Spend weeks manually checking domains, handles, and trademarks
+              <p>Spend weeks manually checking domains, handles, and similar companies
                  across 10+ different websites before picking a name.</p>
             </div>
             <div className="problem-example">
@@ -106,7 +106,7 @@ export default function ThesisPage() {
 
           <p>
             The brand naming process is <strong>fragmented</strong>. Domain registrars
-            check domains. Social tools check handles. Trademark attorneys check USPTO.
+            check domains. Social tools check handles. Search engines find competitors.
             Linguists check pronunciation. Nobody checks "what does this name make
             people think of?"
           </p>
@@ -160,10 +160,10 @@ export default function ThesisPage() {
                   <td className="highlight-col"><span className="check-icon">✓</span></td>
                 </tr>
                 <tr>
-                  <td>Trademark Search</td>
-                  <td><span className="check-icon">✓</span></td>
-                  <td><span className="check-icon">✓</span></td>
-                  <td><span className="check-icon">✓</span></td>
+                  <td>Similar Company Search</td>
+                  <td><span className="x-icon">✗</span></td>
+                  <td><span className="x-icon">✗</span></td>
+                  <td><span className="partial-icon">~</span></td>
                   <td><span className="x-icon">✗</span></td>
                   <td className="highlight-col"><span className="check-icon">✓</span></td>
                 </tr>
@@ -214,7 +214,7 @@ export default function ThesisPage() {
           <div className="competitor-notes">
             <div className="competitor-note">
               <h4>BrandSnap.ai</h4>
-              <p>Free AI name generator with domain/trademark checks.
+              <p>Free AI name generator with domain availability checks.
                  Strong on availability but no perception analysis or scoring.</p>
             </div>
             <div className="competitor-note">
@@ -230,7 +230,7 @@ export default function ThesisPage() {
             <div className="competitor-note">
               <h4>KnowEm</h4>
               <p>Comprehensive social handle checker (500+ platforms).
-                 No trademark, pronunciation, or perception analysis.</p>
+                 No pronunciation or perception analysis.</p>
             </div>
           </div>
         </div>
@@ -296,7 +296,7 @@ export default function ThesisPage() {
               <ul>
                 <li>Domain availability (20+ TLDs)</li>
                 <li>Social handles (Twitter, IG, LinkedIn, TikTok)</li>
-                <li>Trademark database search (USPTO, EUIPO)</li>
+                <li>Similar company search</li>
                 <li>App store name availability</li>
               </ul>
             </div>

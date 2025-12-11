@@ -173,8 +173,7 @@ def _print_workflow_result(result):
         rec = result.recommended
         console.print(Panel(
             f"[bold]{rec.name}[/bold] - Score: {rec.evaluation.overall_score:.0f}/100\n\n"
-            f"[dim]This tool provides general information only and does not constitute legal advice.\n"
-            f"Consult a trademark attorney before finalizing your brand name.[/dim]",
+            f"[dim]This tool provides general information only and does not constitute legal advice.[/dim]",
             title="[bold gold1]★ Recommended[/bold gold1]",
             border_style="gold1",
         ))
@@ -210,14 +209,6 @@ def _print_result(result, mission: str | None):
         status = "[green]Available[/green]" if available else "[red]Taken[/red]"
         social_table.add_row(platform, status)
     console.print(social_table)
-
-    # Similar trademarks (informational only)
-    if result.trademark:
-        match_count = len(result.trademark.matches)
-        if match_count == 0:
-            console.print("\n[bold]Similar Trademarks:[/bold] [green]None found[/green]")
-        else:
-            console.print(f"\n[bold]Similar Trademarks:[/bold] {match_count} found")
 
     # Pronunciation
     if result.pronunciation:
@@ -256,7 +247,7 @@ def _print_comparison(results):
     table.add_row("Overall", *[f"{r.overall_score:.0f}" for r in results])
     table.add_row("Domain", *[f"{r.domain_score:.0f}" for r in results])
     table.add_row("Social", *[f"{r.social_score:.0f}" for r in results])
-    table.add_row("Similar Names", *[f"{r.trademark_score:.0f}" for r in results])
+    table.add_row("Similar Companies", *[f"{r.similar_companies_score:.0f}" for r in results])
     table.add_row("Pronunciation", *[f"{r.pronunciation_score:.0f}" for r in results])
     table.add_row("International", *[f"{r.international_score:.0f}" for r in results])
 

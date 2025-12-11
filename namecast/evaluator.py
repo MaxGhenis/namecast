@@ -5,6 +5,10 @@ from typing import Optional
 import os
 import json
 import whois
+import httpx
+
+# Cache for domain pricing to avoid repeated API calls
+_pricing_cache: dict = {}
 
 
 @dataclass
@@ -21,13 +25,6 @@ class SimilarCompaniesResult:
     """Result of similar companies search."""
     matches: list[SimilarCompany]
     confusion_risk: str  # "low", "medium", "high"
-
-
-@dataclass
-class TrademarkResult:
-    """Result of trademark search."""
-    risk_level: str  # "low", "medium", "high"
-    matches: list[dict]
 
 
 @dataclass
@@ -81,7 +78,6 @@ class EvaluationResult:
     overall_score: float
     domain_score: float
     social_score: float
-    trademark_score: float
     pronunciation_score: float
     international_score: float
     similar_companies_score: float = 100.0
@@ -90,8 +86,8 @@ class EvaluationResult:
 
     domains: dict[str, bool] = field(default_factory=dict)
     domain_details: dict[str, DomainStatus] = field(default_factory=dict)
+    domain_pricing: dict[str, dict] = field(default_factory=dict)
     social: dict[str, SocialHandleResult] = field(default_factory=dict)
-    trademark: Optional[TrademarkResult] = None
     pronunciation: Optional[PronunciationResult] = None
     international: dict[str, dict] = field(default_factory=dict)
     perception: Optional[PerceptionResult] = None
@@ -138,12 +134,6 @@ class EvaluationResult:
                 status = "✓" if result else "✗"
                 lines.append(f"| {platform} | {status} | - |")
 
-        if self.trademark and self.trademark.matches:
-            lines.extend([
-                "",
-                f"### Similar Trademarks: {len(self.trademark.matches)} found",
-            ])
-
         if self.pronunciation:
             lines.extend([
                 "",
@@ -164,53 +154,55 @@ class EvaluationResult:
         return "\n".join(lines)
 
 
-def whois_lookup(domain: str) -> Optional[dict]:
-    """Look up WHOIS info for a domain. Returns None if not registered."""
-    import subprocess
+def get_domain_pricing(tlds: Optional[list[str]] = None) -> dict[str, dict]:
+    """Get domain pricing from Porkbun API.
 
-    # Use direct whois servers for accurate results
-    tld = domain.split(".")[-1].lower()
-    whois_servers = {
-        "ai": "whois.nic.ai",
-        "io": "whois.nic.io",
-        "co": "whois.nic.co",
-        "app": "whois.nic.google",
-        "dev": "whois.nic.google",
-        "com": "whois.verisign-grs.com",
-        "net": "whois.verisign-grs.com",
-        "org": "whois.pir.org",
-        "xyz": "whois.nic.xyz",
-        "tech": "whois.nic.tech",
-    }
+    Args:
+        tlds: Optional list of TLDs to filter (e.g., ["ai", "com", "io"]).
+              If None, returns all available pricing.
+
+    Returns:
+        Dict mapping TLD (without dot) to pricing info:
+        {"ai": {"registration": "72.40", "renewal": "72.40", ...}, ...}
+    """
+    global _pricing_cache
+
+    # Return cached results if available
+    if _pricing_cache:
+        if tlds:
+            return {k: v for k, v in _pricing_cache.items() if k in tlds}
+        return _pricing_cache
 
     try:
-        if tld in whois_servers:
-            # Use direct whois server for better accuracy
-            result = subprocess.run(
-                ["whois", "-h", whois_servers[tld], domain],
-                capture_output=True,
-                text=True,
-                timeout=10
-            )
-            output = result.stdout.lower()
+        response = httpx.get(
+            "https://api.porkbun.com/api/json/v3/pricing/get",
+            timeout=10.0
+        )
+        response.raise_for_status()
+        data = response.json()
 
-            # Check for "not found" indicators
-            not_found_indicators = ["domain not found", "not found", "no match", "no data found"]
-            if any(indicator in output for indicator in not_found_indicators):
-                return None  # Available
+        if data.get("status") == "SUCCESS" and "pricing" in data:
+            _pricing_cache.update(data["pricing"])
+            if tlds:
+                return {k: v for k, v in _pricing_cache.items() if k in tlds}
+            return _pricing_cache
+    except Exception as e:
+        print(f"Failed to fetch domain pricing: {e}")
 
-            # If we got domain info, it's registered
-            if "domain name:" in output or "domain:" in output:
-                return {"domain_name": domain, "creation_date": None}
-            return None
-        else:
-            # Fallback to python-whois for other TLDs
-            w = whois.whois(domain)
-            if w.domain_name:
-                return {"domain_name": w.domain_name, "creation_date": w.creation_date}
-            return None
-    except Exception:
+    return {}
+
+
+def whois_lookup(domain: str) -> Optional[dict]:
+    """Look up WHOIS info for a domain. Returns None if not registered."""
+    try:
+        w = whois.whois(domain)
+        if w.domain_name:
+            return {"domain_name": w.domain_name, "creation_date": w.creation_date}
         return None
+    except whois.exceptions.WhoisDomainNotFoundError:
+        return None  # Domain is available
+    except Exception:
+        return None  # Treat errors as "unknown" (assume available)
 
 
 class BrandEvaluator:
@@ -238,7 +230,6 @@ class BrandEvaluator:
         """
         domains, domain_details = self.check_domains_detailed(name)
         social = self.check_social(name, planned_domain)
-        trademark = self.check_trademark(name)
         pronunciation = self.analyze_pronunciation(name)
         international = self.check_international(name)
         perception = self.analyze_perception(name, mission)
@@ -246,25 +237,27 @@ class BrandEvaluator:
         brand_scope = self.analyze_brand_scope(name, mission)
         taglines = self.generate_taglines(name, mission) if mission else []
 
+        # Get domain pricing for checked TLDs
+        tlds_to_price = [tld.lstrip(".") for tld in self.DEFAULT_TLDS]
+        domain_pricing = get_domain_pricing(tlds_to_price)
+
         # Calculate scores
         domain_score = self._calc_domain_score_detailed(domain_details)
         social_score = self._calc_social_score(social)
-        trademark_score = self._calc_trademark_score(trademark)
         pronunciation_score = pronunciation.score * 10  # 0-10 -> 0-100
         international_score = self._calc_international_score(international)
         similar_companies_score = self._calc_similar_companies_score(similar_companies)
         brand_scope_score = self._calc_brand_scope_score(brand_scope)
         tagline_score = 70.0 if taglines else 50.0  # Placeholder
 
-        # Weighted overall score (updated weights)
+        # Weighted overall score
         overall_score = (
-            domain_score * 0.15
+            domain_score * 0.20
             + social_score * 0.05
-            + trademark_score * 0.15
             + pronunciation_score * 0.10
             + international_score * 0.10
-            + similar_companies_score * 0.15
-            + brand_scope_score * 0.15
+            + similar_companies_score * 0.20
+            + brand_scope_score * 0.20
             + tagline_score * 0.10
             + (perception.mission_alignment or 7) * 0.5  # 0-10 -> 0-5 pts
         )
@@ -274,7 +267,6 @@ class BrandEvaluator:
             overall_score=overall_score,
             domain_score=domain_score,
             social_score=social_score,
-            trademark_score=trademark_score,
             pronunciation_score=pronunciation_score,
             international_score=international_score,
             similar_companies_score=similar_companies_score,
@@ -282,8 +274,8 @@ class BrandEvaluator:
             tagline_score=tagline_score,
             domains=domains,
             domain_details=domain_details,
+            domain_pricing=domain_pricing,
             social=social,
-            trademark=trademark,
             pronunciation=pronunciation,
             international=international,
             perception=perception,
@@ -419,11 +411,6 @@ class BrandEvaluator:
                 unique.append(alt)
 
         return unique[:10]  # Top 10 alternatives
-
-    def check_trademark(self, name: str) -> TrademarkResult:
-        """Search for trademark conflicts."""
-        # TODO: Implement USPTO TESS search
-        return TrademarkResult(risk_level="low", matches=[])
 
     def find_similar_companies(self, name: str) -> SimilarCompaniesResult:
         """Find similar-sounding or confusingly similar existing companies."""
@@ -657,15 +644,6 @@ Only include companies with similarity_score > 0.4. Respond ONLY with valid JSON
 
         return total_score / len(social)
 
-    def _calc_trademark_score(self, trademark: TrademarkResult) -> float:
-        """Calculate trademark safety score (0-100)."""
-        if trademark.risk_level == "low":
-            return 100
-        elif trademark.risk_level == "medium":
-            return 50
-        else:
-            return 10
-
     def _calc_international_score(self, international: dict[str, dict]) -> float:
         """Calculate international safety score (0-100)."""
         if not international:
@@ -841,10 +819,10 @@ Respond with ONLY a JSON array:
             return []
 
     def quick_domain_check(self, name: str) -> dict[str, bool]:
-        """Fast domain check - just .com and .io for filtering."""
+        """Fast domain check - .com, .ai, and .io for filtering."""
         result = {}
         name_lower = name.lower()
-        for tld in [".com", ".io"]:
+        for tld in [".com", ".ai", ".io"]:
             domain = f"{name_lower}{tld}"
             info = whois_lookup(domain)
             result[tld] = info is None
@@ -929,11 +907,11 @@ class NamecastWorkflow:
             candidate.domains_available = domains
 
             # Must have at least one key domain available
-            if domains.get(".com") or domains.get(".io"):
+            if domains.get(".com") or domains.get(".ai") or domains.get(".io"):
                 candidate.passed_domain_filter = True
                 viable_candidates.append(candidate)
             else:
-                candidate.rejection_reason = "No .com or .io domain available"
+                candidate.rejection_reason = "No .com, .ai, or .io domain available"
 
         # Step 4: Full evaluation on top viable candidates
         # Sort by user ideas first, then by domain availability

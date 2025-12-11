@@ -3,19 +3,24 @@ import '../styles/Home.css'
 
 const API_URL = 'http://localhost:8000'
 
+interface DomainPricing {
+  registration: string
+  renewal: string
+}
+
 interface EvaluationResult {
   name: string
   overall_score: number
   domain_score: number
   social_score: number
-  trademark_score: number
   pronunciation_score: number
   international_score: number
   brand_scope_score?: number
   tagline_score?: number
+  similar_companies_score?: number
   domains: Record<string, boolean>
+  domain_pricing?: Record<string, DomainPricing>
   social: Record<string, boolean>
-  trademark: { risk_level: string; matches: unknown[] }
   pronunciation: { score: number; syllables: number; spelling_difficulty: string }
   international: Record<string, { has_issue: boolean; meaning: string | null }>
   perception: { evokes: string; industry_association: string[]; memorability: string; mission_alignment?: number }
@@ -104,7 +109,7 @@ export default function HomePage() {
           </h1>
           <p className="hero-subtitle">
             See how people will perceive your brand before you launch.
-            Domain availability. Social handles. Trademark risk.
+            Domain availability. Social handles. Similar companies.
             AI-powered perception forecasting. All in one oracle.
           </p>
           <div className="hero-cta">
@@ -201,6 +206,7 @@ export default function HomePage() {
                       <th>Name</th>
                       <th>Source</th>
                       <th>.com</th>
+                      <th>.ai</th>
                       <th>.io</th>
                       <th>Score</th>
                       <th>Status</th>
@@ -217,42 +223,78 @@ export default function HomePage() {
                         const scoreB = b.evaluation?.overall_score ?? 0
                         return scoreB - scoreA
                       })
-                      .map((candidate, i) => (
-                        <tr key={i} className={!candidate.passed_domain_filter ? 'filtered-out' : ''}>
-                          <td className="candidate-name">
-                            {workflowResult.recommended?.name === candidate.name && (
-                              <span className="star-badge">★</span>
-                            )}
-                            {candidate.name}
-                          </td>
-                          <td>{candidate.source === 'user' ? 'You' : 'AI'}</td>
-                          <td className={candidate.domains_available['.com'] ? 'available' : 'unavailable'}>
-                            {candidate.domains_available['.com'] ? '✓' : '✗'}
-                          </td>
-                          <td className={candidate.domains_available['.io'] ? 'available' : 'unavailable'}>
-                            {candidate.domains_available['.io'] ? '✓' : '✗'}
-                          </td>
-                          <td>
-                            {candidate.evaluation
-                              ? Math.round(candidate.evaluation.overall_score)
-                              : '-'}
-                          </td>
-                          <td>
-                            {candidate.evaluation
-                              ? 'Evaluated'
-                              : candidate.passed_domain_filter
-                                ? 'Not evaluated'
-                                : 'No domain'}
-                          </td>
-                        </tr>
-                      ))}
+                      .map((candidate, i) => {
+                        const pricing = candidate.evaluation?.domain_pricing
+                        return (
+                          <tr key={i} className={!candidate.passed_domain_filter ? 'filtered-out' : ''}>
+                            <td className="candidate-name">
+                              {workflowResult.recommended?.name === candidate.name && (
+                                <span className="star-badge">★</span>
+                              )}
+                              {candidate.name}
+                            </td>
+                            <td>{candidate.source === 'user' ? 'You' : 'AI'}</td>
+                            <td className={candidate.domains_available['.com'] ? 'available' : 'unavailable'}>
+                              {candidate.domains_available['.com'] ? (
+                                <a
+                                  href={`https://porkbun.com/checkout/search?q=${candidate.name}.com`}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="domain-link"
+                                  title={pricing?.com ? `$${pricing.com.registration}/yr` : 'Buy domain'}
+                                >
+                                  ✓ {pricing?.com && <span className="price">${pricing.com.registration}</span>}
+                                </a>
+                              ) : '✗'}
+                            </td>
+                            <td className={candidate.domains_available['.ai'] ? 'available' : 'unavailable'}>
+                              {candidate.domains_available['.ai'] ? (
+                                <a
+                                  href={`https://porkbun.com/checkout/search?q=${candidate.name}.ai`}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="domain-link"
+                                  title={pricing?.ai ? `$${pricing.ai.registration}/yr` : 'Buy domain'}
+                                >
+                                  ✓ {pricing?.ai && <span className="price">${pricing.ai.registration}</span>}
+                                </a>
+                              ) : '✗'}
+                            </td>
+                            <td className={candidate.domains_available['.io'] ? 'available' : 'unavailable'}>
+                              {candidate.domains_available['.io'] ? (
+                                <a
+                                  href={`https://porkbun.com/checkout/search?q=${candidate.name}.io`}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="domain-link"
+                                  title={pricing?.io ? `$${pricing.io.registration}/yr` : 'Buy domain'}
+                                >
+                                  ✓ {pricing?.io && <span className="price">${pricing.io.registration}</span>}
+                                </a>
+                              ) : '✗'}
+                            </td>
+                            <td>
+                              {candidate.evaluation
+                                ? Math.round(candidate.evaluation.overall_score)
+                                : '-'}
+                            </td>
+                            <td>
+                              {candidate.evaluation
+                                ? 'Evaluated'
+                                : candidate.passed_domain_filter
+                                  ? 'Not evaluated'
+                                  : 'No domain'}
+                            </td>
+                          </tr>
+                        )
+                      })}
                   </tbody>
                 </table>
               </div>
 
               <div className="eval-disclaimer">
-                This tool provides general information only and does not constitute legal advice.
-                Consult a trademark attorney before finalizing your brand name.
+                This tool provides general information only. Verify domain availability
+                and conduct your own due diligence before finalizing your brand name.
               </div>
             </div>
           )}

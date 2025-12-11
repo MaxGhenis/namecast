@@ -1310,6 +1310,26 @@
   color: var(--color-error);
 }
 
+.candidates-table .domain-link {
+  color: var(--color-success);
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  transition: opacity 0.2s;
+}
+
+.candidates-table .domain-link:hover {
+  opacity: 0.8;
+  text-decoration: underline;
+}
+
+.candidates-table .domain-link .price {
+  font-size: 0.75rem;
+  opacity: 0.8;
+  font-weight: 400;
+}
+
 @media (max-width: 768px) {
   .workflow-summary {
     flex-direction: column;

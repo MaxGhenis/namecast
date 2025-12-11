@@ -39,7 +39,6 @@ class TestBrandEvaluator:
         result = evaluator.evaluate("TestBrand")
         assert hasattr(result, "domain_score")
         assert hasattr(result, "social_score")
-        assert hasattr(result, "trademark_score")
         assert hasattr(result, "pronunciation_score")
         assert hasattr(result, "international_score")
 
@@ -120,22 +119,6 @@ class TestSocialChecker:
         for platform, handle_result in result.items():
             assert isinstance(handle_result, SocialHandleResult)
             assert isinstance(handle_result.exact_available, bool)
-
-
-class TestTrademarkChecker:
-    """Tests for trademark search."""
-
-    def test_check_trademark_returns_risk_level(self):
-        """check_trademark() should return a risk level."""
-        evaluator = BrandEvaluator()
-        result = evaluator.check_trademark("TestBrand")
-        assert result.risk_level in ["low", "medium", "high"]
-
-    def test_check_trademark_returns_matches(self):
-        """Should return list of similar trademark matches."""
-        evaluator = BrandEvaluator()
-        result = evaluator.check_trademark("TestBrand")
-        assert isinstance(result.matches, list)
 
 
 class TestPronunciationScorer:
@@ -262,6 +245,108 @@ class TestScorecard:
         md = result.to_markdown()
         assert "## Brand Evaluation: TestBrand" in md
         assert "Overall Score" in md
+
+
+class TestDomainPricing:
+    """Tests for domain pricing functionality."""
+
+    MOCK_PRICING = {
+        "ai": {"registration": "72.40", "renewal": "72.40"},
+        "com": {"registration": "11.08", "renewal": "11.08"},
+        "io": {"registration": "28.12", "renewal": "46.65"},
+        "co": {"registration": "9.58", "renewal": "25.97"},
+        "app": {"registration": "15.00", "renewal": "15.00"},
+    }
+
+    @patch("namecast.evaluator.httpx.get")
+    def test_get_domain_pricing_returns_dict(self, mock_get):
+        """get_domain_pricing() should return dict of TLD -> price info."""
+        from namecast.evaluator import get_domain_pricing, _pricing_cache
+        _pricing_cache.clear()
+        mock_get.return_value.json.return_value = {"status": "SUCCESS", "pricing": self.MOCK_PRICING}
+        mock_get.return_value.raise_for_status = lambda: None
+        result = get_domain_pricing()
+        assert isinstance(result, dict)
+
+    @patch("namecast.evaluator.httpx.get")
+    def test_get_domain_pricing_includes_common_tlds(self, mock_get):
+        """Should include pricing for common TLDs."""
+        from namecast.evaluator import get_domain_pricing, _pricing_cache
+        _pricing_cache.clear()
+        mock_get.return_value.json.return_value = {"status": "SUCCESS", "pricing": self.MOCK_PRICING}
+        mock_get.return_value.raise_for_status = lambda: None
+        result = get_domain_pricing()
+        assert "ai" in result
+        assert "com" in result
+        assert "io" in result
+        assert "co" in result
+
+    @patch("namecast.evaluator.httpx.get")
+    def test_get_domain_pricing_has_registration_price(self, mock_get):
+        """Each TLD should have registration price."""
+        from namecast.evaluator import get_domain_pricing, _pricing_cache
+        _pricing_cache.clear()
+        mock_get.return_value.json.return_value = {"status": "SUCCESS", "pricing": self.MOCK_PRICING}
+        mock_get.return_value.raise_for_status = lambda: None
+        result = get_domain_pricing()
+        for tld, pricing in result.items():
+            assert "registration" in pricing
+            assert isinstance(float(pricing["registration"]), float)
+
+    @patch("namecast.evaluator.httpx.get")
+    def test_get_domain_pricing_has_renewal_price(self, mock_get):
+        """Each TLD should have renewal price."""
+        from namecast.evaluator import get_domain_pricing, _pricing_cache
+        _pricing_cache.clear()
+        mock_get.return_value.json.return_value = {"status": "SUCCESS", "pricing": self.MOCK_PRICING}
+        mock_get.return_value.raise_for_status = lambda: None
+        result = get_domain_pricing()
+        for tld, pricing in result.items():
+            assert "renewal" in pricing
+            assert isinstance(float(pricing["renewal"]), float)
+
+    @patch("namecast.evaluator.httpx.get")
+    def test_get_domain_pricing_caches_results(self, mock_get):
+        """Should cache pricing to avoid repeated API calls."""
+        from namecast.evaluator import get_domain_pricing, _pricing_cache
+        _pricing_cache.clear()
+        mock_get.return_value.json.return_value = {"status": "SUCCESS", "pricing": self.MOCK_PRICING}
+        mock_get.return_value.raise_for_status = lambda: None
+        # First call
+        result1 = get_domain_pricing()
+        # Second call should use cache (mock not called again)
+        result2 = get_domain_pricing()
+        assert result1 == result2
+        assert mock_get.call_count == 1  # Only called once due to caching
+
+    @patch("namecast.evaluator.httpx.get")
+    @patch("namecast.evaluator.whois_lookup")
+    def test_evaluation_includes_domain_pricing(self, mock_whois, mock_get):
+        """EvaluationResult should include domain pricing."""
+        from namecast.evaluator import _pricing_cache
+        _pricing_cache.clear()
+        mock_whois.return_value = None
+        mock_get.return_value.json.return_value = {"status": "SUCCESS", "pricing": self.MOCK_PRICING}
+        mock_get.return_value.raise_for_status = lambda: None
+        evaluator = BrandEvaluator()
+        result = evaluator.evaluate("TestBrand")
+        assert hasattr(result, "domain_pricing")
+        assert isinstance(result.domain_pricing, dict)
+
+    @patch("namecast.evaluator.httpx.get")
+    @patch("namecast.evaluator.whois_lookup")
+    def test_evaluation_pricing_matches_checked_tlds(self, mock_whois, mock_get):
+        """Pricing should be included for all TLDs we check."""
+        from namecast.evaluator import _pricing_cache
+        _pricing_cache.clear()
+        mock_whois.return_value = None
+        mock_get.return_value.json.return_value = {"status": "SUCCESS", "pricing": self.MOCK_PRICING}
+        mock_get.return_value.raise_for_status = lambda: None
+        evaluator = BrandEvaluator()
+        result = evaluator.evaluate("TestBrand")
+        for tld in result.domains.keys():
+            tld_key = tld.lstrip(".")
+            assert tld_key in result.domain_pricing
 
 
 class TestCLI:
