@@ -359,7 +359,7 @@ class TestCLI:
         from namecast.cli import main
         from click.testing import CliRunner
         runner = CliRunner()
-        result = runner.invoke(main, ["Acme"])
+        result = runner.invoke(main, ["eval", "Acme"])
         assert result.exit_code == 0
         assert "Acme" in result.output
 
@@ -370,7 +370,7 @@ class TestCLI:
         from namecast.cli import main
         from click.testing import CliRunner
         runner = CliRunner()
-        result = runner.invoke(main, ["Luminary", "--mission", "Education platform"])
+        result = runner.invoke(main, ["eval", "Luminary", "--mission", "Education platform"])
         assert result.exit_code == 0
         assert "Mission Alignment" in result.output
 
@@ -382,7 +382,7 @@ class TestCLI:
         from namecast.cli import main
         from click.testing import CliRunner
         runner = CliRunner()
-        result = runner.invoke(main, ["Acme", "--json"])
+        result = runner.invoke(main, ["eval", "Acme", "--json"])
         assert result.exit_code == 0
         parsed = json.loads(result.output)
         assert parsed["name"] == "Acme"
@@ -394,6 +394,6 @@ class TestCLI:
         from namecast.cli import main
         from click.testing import CliRunner
         runner = CliRunner()
-        result = runner.invoke(main, ["--compare", "Acme", "Globex", "Initech"])
+        result = runner.invoke(main, ["eval", "--compare", "Acme", "Globex", "Initech"])
         assert result.exit_code == 0
         assert "Comparison" in result.output

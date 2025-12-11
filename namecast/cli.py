@@ -8,6 +8,7 @@ from rich.text import Text
 from rich.progress import Progress, SpinnerColumn, TextColumn
 
 from namecast.evaluator import BrandEvaluator, NamecastWorkflow
+from namecast.perception import analyze_two_pass
 
 
 console = Console()
@@ -103,6 +104,107 @@ def eval(names: tuple[str, ...], mission: str | None, output_json: bool, compare
                 click.echo(result.to_json())
             else:
                 _print_result(result, mission)
+
+
+@main.command()
+@click.argument("name")
+@click.argument("product_description")
+@click.option("--json", "output_json", is_flag=True, help="Output as JSON")
+def comport(name: str, product_description: str, output_json: bool):
+    """Two-pass evaluation: Does the product comport with the name?
+
+    This runs a two-pass test:
+    1. "What would you expect a company named {NAME} to do?"
+    2. "{NAME} does {PRODUCT}. Does that comport?"
+
+    The delta between expectation and reality reveals whether
+    name-product mismatches are intentional (like Mailchimp) or jarring.
+
+    Examples:
+
+        namecast comport EggNest "simulates personal finance with real tax models"
+
+        namecast comport Stripe "processes online payments"
+    """
+    with Progress(
+        SpinnerColumn(),
+        TextColumn("[progress.description]{task.description}"),
+        console=console,
+        transient=True,
+    ) as progress:
+        progress.add_task("Running two-pass evaluation...", total=None)
+        result = analyze_two_pass(name, product_description)
+
+    if output_json:
+        import json
+        from dataclasses import asdict
+        click.echo(json.dumps(asdict(result), indent=2, default=str))
+    else:
+        _print_comport_result(result)
+
+
+def _print_comport_result(result):
+    """Print the two-pass comport analysis."""
+    console.print()
+
+    # Verdict panel with color based on result
+    verdict_colors = {
+        "strong_fit": "green",
+        "positive_contrast": "blue",
+        "neutral": "yellow",
+        "jarring_mismatch": "red",
+    }
+    color = verdict_colors.get(result.verdict, "white")
+
+    console.print(Panel(
+        f"[bold {color}]{result.verdict.upper().replace('_', ' ')}[/bold {color}]\n\n"
+        f"{result.verdict_explanation}",
+        title=f"[bold]{result.name}[/bold]",
+        subtitle=f"Comport Score: {result.avg_comport_score:.1f}/10",
+    ))
+
+    # Key metrics
+    console.print()
+    metrics_table = Table(title="Two-Pass Metrics", show_header=True)
+    metrics_table.add_column("Metric")
+    metrics_table.add_column("Value", justify="right")
+
+    metrics_table.add_row("Comport Rate", f"{result.comport_rate*100:.0f}%")
+    metrics_table.add_row("Positive Surprise Rate", f"{result.positive_surprise_rate*100:.0f}%")
+    metrics_table.add_row("Contrast Works Rate", f"{result.contrast_works_rate*100:.0f}%")
+
+    trust_delta_str = f"+{result.trust_delta*100:.0f}%" if result.trust_delta >= 0 else f"{result.trust_delta*100:.0f}%"
+    trust_color = "green" if result.trust_delta > 0 else "red" if result.trust_delta < 0 else "white"
+    metrics_table.add_row("Trust Delta", f"[{trust_color}]{trust_delta_str}[/{trust_color}]")
+
+    console.print(metrics_table)
+
+    # Individual persona responses
+    console.print()
+    console.print("[bold]Persona Responses:[/bold]")
+    console.print()
+
+    for r in result.responses:
+        reaction_emoji = {
+            "positive_surprise": "😮",
+            "matches": "✓",
+            "neutral": "—",
+            "jarring_mismatch": "❌",
+        }.get(r.reaction, "?")
+
+        trust_change = ""
+        if r.initial_trust != r.final_trust:
+            trust_change = " [green]↑ trust[/green]" if r.final_trust else " [red]↓ trust[/red]"
+
+        console.print(f"  [bold]{r.persona}[/bold] ({r.age}, {r.occupation})")
+        console.print(f"    Expected: {r.expected_product}")
+        console.print(f"    Reaction: {reaction_emoji} {r.reaction.replace('_', ' ')} (comport: {r.comport_score}/10){trust_change}")
+        if r.reaction != "matches" and r.contrast_works:
+            console.print(f"    [dim]→ Says the contrast works intentionally[/dim]")
+        console.print(f"    [dim]{r.explanation}[/dim]")
+        console.print()
+
+    console.print()
 
 
 def _print_workflow_result(result):
