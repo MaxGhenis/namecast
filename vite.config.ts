@@ -1,10 +1,11 @@
 /// <reference types="vitest" />
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
+import { vanillaExtractPlugin } from '@vanilla-extract/vite-plugin'
 
-export default defineConfig(({ mode }) => ({
-  plugins: [react()],
-  base: mode === 'test' ? '/' : '/namecast/',
+export default defineConfig(() => ({
+  plugins: [react(), vanillaExtractPlugin()],
+  base: '/',
   test: {
     globals: true,
     environment: 'jsdom',

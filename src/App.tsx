@@ -3,7 +3,7 @@ import HomePage from './pages/HomePage'
 import ThesisPage from './pages/ThesisPage'
 import './styles/App.css'
 
-const basename = import.meta.env.BASE_URL.replace(/\/$/, '') || ''
+const basename = ''
 
 function App() {
   const isThesisPage = window.location.pathname.endsWith('/thesis')

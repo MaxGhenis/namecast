@@ -22,15 +22,13 @@ describe('HomePage', () => {
     expect(screen.getByText(/Future Success/i)).toBeInTheDocument()
   })
 
-  it('has mode toggle buttons', () => {
+  it('shows password input for beta access', () => {
     renderHomePage()
-    const modeToggle = document.querySelector('.mode-toggle')
-    expect(modeToggle).toBeInTheDocument()
-    expect(screen.getAllByText('Find Names').length).toBeGreaterThan(0)
-    expect(screen.getByText('Evaluate a Name')).toBeInTheDocument()
+    expect(screen.getByText('Beta password')).toBeInTheDocument()
+    expect(screen.getByPlaceholderText(/Enter access password/i)).toBeInTheDocument()
   })
 
-  it('shows workflow form by default (find mode)', () => {
+  it('shows workflow form', () => {
     renderHomePage()
     expect(screen.getByPlaceholderText(/Describe your project/i)).toBeInTheDocument()
     expect(screen.getByPlaceholderText(/Your name ideas/i)).toBeInTheDocument()
@@ -43,34 +41,29 @@ describe('HomePage', () => {
     expect(textarea.value).toBe('A SaaS tool for tracking carbon emissions')
   })
 
-  it('switches to evaluate mode and shows brand name input', () => {
-    renderHomePage()
-    const evaluateBtn = screen.getByText('Evaluate a Name')
-    fireEvent.click(evaluateBtn)
-    const input = screen.getByPlaceholderText(/Enter a brand name/i) as HTMLInputElement
-    expect(input).toBeInTheDocument()
-    fireEvent.change(input, { target: { value: 'TestBrand' } })
-    expect(input.value).toBe('TestBrand')
-  })
-
   it('displays feature cards', () => {
     renderHomePage()
-    expect(screen.getByText(/Domain.*Social Availability/i)).toBeInTheDocument()
-    expect(screen.getByText('Similar Company Check')).toBeInTheDocument()
-    expect(screen.getByText('AI Perception Forecasting')).toBeInTheDocument()
+    expect(screen.getByText(/Domain & social availability/i)).toBeInTheDocument()
+    expect(screen.getByText('Similar company check')).toBeInTheDocument()
+    expect(screen.getByText('AI perception forecasting')).toBeInTheDocument()
   })
 
   it('displays how it works section', () => {
     renderHomePage()
-    expect(screen.getByText('How It Works')).toBeInTheDocument()
-    expect(screen.getByText('Cast Your Names')).toBeInTheDocument()
-    expect(screen.getByText('Receive the Forecast')).toBeInTheDocument()
-    expect(screen.getByText('Choose Your Destiny')).toBeInTheDocument()
+    expect(screen.getByText('How it works')).toBeInTheDocument()
+    expect(screen.getByText('Cast your names')).toBeInTheDocument()
+    expect(screen.getByText('Receive the forecast')).toBeInTheDocument()
+    expect(screen.getByText('Choose your destiny')).toBeInTheDocument()
   })
 
   it('displays the CTA section', () => {
     renderHomePage()
-    expect(screen.getByText(/See Your Name.*Future/i)).toBeInTheDocument()
-    expect(screen.getByText('Consult the Oracle')).toBeInTheDocument()
+    expect(screen.getByText(/See your name.*future/i)).toBeInTheDocument()
+    expect(screen.getByText('Consult the oracle')).toBeInTheDocument()
+  })
+
+  it('has a secondary CTA for GitHub', () => {
+    renderHomePage()
+    expect(screen.getByText('View on GitHub')).toBeInTheDocument()
   })
 })

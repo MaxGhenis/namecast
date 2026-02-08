@@ -505,6 +505,7 @@ Only include companies with similarity_score > 0.4. Respond ONLY with valid JSON
     def analyze_pronunciation(self, name: str) -> PronunciationResult:
         """Analyze pronunciation characteristics."""
         syllables = self._count_syllables(name)
+        name_lower = name.lower()
 
         # Score based on syllables (1-2 ideal)
         if syllables <= 2:
@@ -519,13 +520,57 @@ Only include companies with similarity_score > 0.4. Respond ONLY with valid JSON
         # Penalize difficult consonant clusters
         difficult_patterns = ["xw", "zx", "ptl", "tch", "sch"]
         for pattern in difficult_patterns:
-            if pattern in name.lower():
+            if pattern in name_lower:
                 base_score -= 1.5
+
+        # Penalize AMBIGUOUS pronunciations - where syllable boundaries are unclear
+        # These are letter combos that could be split/pronounced multiple ways
+        ambiguous_patterns = [
+            ("eax", 2.0),   # Pipeax: is it "ee-ax" or "ex" or "eeks"?
+            ("eox", 2.0),   # Same issue
+            ("iax", 2.0),   # Could be "ee-ax" or "yax"
+            ("oax", 1.5),   # Coax is clear but others aren't
+            ("uax", 2.0),   # Unclear
+            ("aeo", 1.5),   # Vowel clusters - where's the break?
+            ("eai", 1.5),
+            ("oeu", 1.5),
+            ("iou", 1.5),
+            ("aea", 2.0),
+            ("eae", 2.0),
+            ("iai", 2.0),
+            ("oao", 2.0),
+            ("uau", 2.0),
+        ]
+        for pattern, penalty in ambiguous_patterns:
+            if pattern in name_lower:
+                base_score -= penalty
+
+        # Penalize made-up suffixes that look like words but aren't
+        # These create "how do I say this?" moments
+        weird_suffixes = [
+            ("ax", 0.5),    # Pipeax - is the 'a' long or short?
+            ("ix", 0.5),    # Unless it's a real word ending
+            ("ux", 0.5),
+            ("eum", 1.0),   # Lineum - sounds like a fake element
+            ("ium", 0.5),   # Real element suffix, less penalty
+            ("ify", 0.0),   # Spotify-like, well understood
+            ("ly", 0.0),    # Adverb suffix, clear
+        ]
+        for suffix, penalty in weird_suffixes:
+            if name_lower.endswith(suffix) and len(name_lower) > len(suffix) + 2:
+                base_score -= penalty
+
+        # Bonus for clearly pronounceable patterns (well-known morphemes)
+        clear_patterns = ["flow", "hub", "stack", "base", "cloud", "sync", "link", "wise", "ly"]
+        for pattern in clear_patterns:
+            if pattern in name_lower:
+                base_score += 0.5
+                break  # Only one bonus
 
         # Determine spelling difficulty
         if self._is_phonetic(name):
             spelling = "easy"
-        elif any(c in name.lower() for c in ["ph", "gh", "ough"]):
+        elif any(c in name_lower for c in ["ph", "gh", "ough"]):
             spelling = "hard"
         else:
             spelling = "medium"
@@ -967,11 +1012,17 @@ class NamecastWorkflow:
 
 Requirements for good brand names:
 - Short (1-2 words, ideally 6-10 characters)
-- Easy to spell and pronounce
+- Easy to spell and pronounce - AVOID made-up suffixes like "-eum", "-ax", "-ix"
+- Clear pronunciation - someone should know how to say it on first read
 - Memorable and distinctive
 - Available as a domain (.com or .io preferred)
 - No negative connotations in major languages
 - Evokes the right associations for the product/industry
+
+IMPORTANT: Do NOT generate names that are similar to existing well-known products mentioned in the description. For example:
+- If description mentions "Linear", don't generate "Lineum", "Linearify", "Linea", etc.
+- If description mentions "Notion", don't generate "Notionify", "Notionly", etc.
+- Create ORIGINAL names that complement, not copy, the referenced products.
 
 Respond with ONLY a JSON array of names, no explanation:
 ["Name1", "Name2", ...]"""
@@ -988,8 +1039,112 @@ Respond with ONLY a JSON array of names, no explanation:
                 text = text.strip()
 
             names = json.loads(text)
-            return [n.strip() for n in names if isinstance(n, str)]
+            raw_names = [n.strip() for n in names if isinstance(n, str)]
+
+            # Post-filter: remove names too similar to mission keywords
+            filtered_names = self._filter_similar_to_mission(raw_names, project_description)
+            return filtered_names
 
         except Exception as e:
             print(f"Name generation failed: {e}")
             return []
+
+    def _filter_similar_to_mission(self, names: list[str], mission: str) -> list[str]:
+        """Filter out names that are too similar to PRODUCT/COMPANY names in the mission.
+
+        This is CRITICAL - if user says "crm + linear", we must NEVER return
+        "Lineum", "Linearify", "Linea", etc. These are lazy derivatives.
+
+        But we SHOULD allow derivatives of industry terms like "CRM", "API", "SaaS".
+        """
+        import re
+
+        # Common words to ignore
+        common_words = {"the", "and", "for", "that", "this", "with", "from", "have",
+                        "been", "will", "would", "could", "should", "their", "there",
+                        "about", "which", "when", "what", "your", "more", "some",
+                        "into", "like", "just", "than", "them", "then", "also", "very",
+                        "most", "only", "over", "such", "make", "made", "can", "but",
+                        "app", "apps", "tool", "tools", "like", "better"}
+
+        # Industry terms - these are NOT company names, ok to derive from
+        industry_terms = {"crm", "erp", "api", "saas", "paas", "iaas", "cms", "cdn",
+                         "seo", "ppc", "roi", "kpi", "b2b", "b2c", "ai", "ml", "llm",
+                         "devops", "fintech", "edtech", "healthtech", "martech",
+                         "ecommerce", "analytics", "automation", "dashboard",
+                         "workflow", "integration", "sync", "data", "cloud"}
+
+        # Extract words that look like product/company names
+        # Heuristic: Capitalized words or words 4+ chars that aren't industry terms
+        mission_words = set()
+
+        # First pass: get capitalized words (likely product names)
+        for word in re.findall(r'\b[A-Z][a-zA-Z]{2,}\b', mission):
+            word_lower = word.lower()
+            if word_lower not in common_words and word_lower not in industry_terms:
+                mission_words.add(word_lower)
+
+        # Second pass: get lowercase words 4+ chars that aren't industry terms
+        for word in re.findall(r'\b[a-z]{4,}\b', mission.lower()):
+            if word not in common_words and word not in industry_terms:
+                mission_words.add(word)
+
+        filtered = []
+        for name in names:
+            name_lower = name.lower()
+            is_too_similar = False
+
+            for mission_word in mission_words:
+                # AGGRESSIVE checks - we'd rather reject good names than accept derivatives
+
+                # 1. Name contains the mission word as a substring
+                if mission_word in name_lower and len(mission_word) >= 3:
+                    is_too_similar = True
+                    break
+
+                # 2. Mission word contains the name as a substring
+                if name_lower in mission_word and len(name_lower) >= 3:
+                    is_too_similar = True
+                    break
+
+                # 3. Name starts with first 3+ chars of mission word
+                if len(mission_word) >= 3 and name_lower.startswith(mission_word[:3]):
+                    is_too_similar = True
+                    break
+
+                # 4. Name ends with last 3+ chars of mission word
+                if len(mission_word) >= 4 and name_lower.endswith(mission_word[-4:]):
+                    is_too_similar = True
+                    break
+
+                # 5. Edit distance check (catches "Lineum" vs "Linear")
+                if self._is_similar_string(name_lower, mission_word, threshold=0.6):
+                    is_too_similar = True
+                    break
+
+            if not is_too_similar:
+                filtered.append(name)
+
+        return filtered
+
+    def _is_similar_string(self, s1: str, s2: str, threshold: float = 0.6) -> bool:
+        """Check if two strings are too similar using Levenshtein-like ratio."""
+        # Quick length check
+        len_diff = abs(len(s1) - len(s2))
+        max_len = max(len(s1), len(s2))
+        if max_len == 0:
+            return True
+        if len_diff > max_len * 0.4:  # More than 40% length difference
+            return False
+
+        # Count matching characters (simple but effective)
+        matches = 0
+        s2_chars = list(s2)
+        for c in s1:
+            if c in s2_chars:
+                matches += 1
+                s2_chars.remove(c)  # Each char can only match once
+
+        # Similarity is matched chars / average length
+        similarity = (2.0 * matches) / (len(s1) + len(s2))
+        return similarity >= threshold
