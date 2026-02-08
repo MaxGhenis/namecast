@@ -29,6 +29,7 @@ app.add_middleware(
         "http://localhost:5177",
         "http://localhost:3000",
         "https://maxghenis.github.io",
+        "https://namecast.vercel.app",
         "https://namecast.ai",
         "https://www.namecast.ai",
     ],
