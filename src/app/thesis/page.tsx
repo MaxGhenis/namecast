@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import Link from "next/link";
 
 const sections = ["Problem", "Competitors", "Gap", "Product", "Business"];
 
@@ -48,7 +49,7 @@ export default function ThesisPage() {
           boxShadow: "0 1px 0 rgba(6, 182, 212, 0.04)",
         }}
       >
-        <a
+        <Link
           href="/"
           className="flex items-center gap-[var(--spacing-sm)] font-[family-name:var(--font-display)] text-[1.125rem] font-semibold no-underline tracking-[-0.02em] transition-opacity duration-200 hover:opacity-80"
           style={{ color: "var(--color-text-primary)" }}
@@ -76,7 +77,7 @@ export default function ThesisPage() {
             />
           </svg>
           Namecast
-        </a>
+        </Link>
       </nav>
 
       {/* Section Navigation */}
@@ -761,7 +762,7 @@ export default function ThesisPage() {
           Try Namecast free. No signup required for your first prophecy.
         </p>
         <div className="flex justify-center gap-[var(--spacing-md)] relative z-1 max-md:flex-col max-md:items-center">
-          <a
+          <Link
             href="/"
             className="font-[family-name:var(--font-satoshi)] py-[var(--spacing-md)] px-[var(--spacing-2xl)] text-[0.95rem] font-semibold rounded-[var(--radius-xl)] no-underline text-white transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_0_0_1px_rgba(6,182,212,0.6),0_8px_32px_-4px_rgba(6,182,212,0.5)]"
             style={{
@@ -771,7 +772,7 @@ export default function ThesisPage() {
             }}
           >
             Consult the Oracle
-          </a>
+          </Link>
           <a
             href="mailto:hello@namecast.ai"
             className="font-[family-name:var(--font-satoshi)] py-[var(--spacing-md)] px-[var(--spacing-2xl)] text-[0.95rem] font-semibold rounded-[var(--radius-xl)] no-underline transition-all duration-300 hover:-translate-y-0.5 hover:border-[rgba(6,182,212,0.3)] hover:shadow-[0_0_20px_-5px_rgba(6,182,212,0.15)]"

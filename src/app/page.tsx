@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import Link from "next/link";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
 
@@ -233,7 +234,7 @@ export default function HomePage() {
         }}
       >
         <div className="py-[var(--spacing-sm)] px-[var(--spacing-lg)] flex justify-between items-center gap-[var(--spacing-3xl)] max-sm:px-[var(--spacing-md)] max-sm:gap-[var(--spacing-md)]">
-          <a
+          <Link
             href="/"
             className="flex items-center gap-[var(--spacing-sm)] font-[family-name:var(--font-display)] text-[1.125rem] font-semibold no-underline tracking-[-0.02em] transition-opacity duration-[var(--duration-fast)] hover:opacity-80"
             style={{ color: "var(--color-text-primary)" }}
@@ -245,7 +246,7 @@ export default function HomePage() {
               <path d="M8 8l3 3M21 21l3 3M8 24l3-3M21 11l3-3" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" opacity="0.5" />
             </svg>
             Namecast
-          </a>
+          </Link>
           <div className="flex gap-[var(--spacing-xl)] max-sm:gap-[var(--spacing-md)]">
             <a
               href="https://github.com/MaxGhenis/namecast"
