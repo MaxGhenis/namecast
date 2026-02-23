@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Namecast - AI-Powered Brand Name Oracle",
+  title: "Namecast - AI-powered brand name oracle",
   description:
     "Forecast your brand name's future with AI. Check domain availability, social handles, trademark risk, pronunciation, and brand-mission alignment in one unified scorecard.",
   icons: {

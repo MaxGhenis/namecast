@@ -147,7 +147,7 @@ export default function ThesisPage() {
             border: "1px solid rgba(6, 182, 212, 0.2)",
           }}
         >
-          Investment Thesis
+          Investment thesis
         </span>
         <h1
           className="font-[family-name:var(--font-clash)] text-[clamp(2.5rem,7vw,4.5rem)] font-bold tracking-[-0.03em] mb-[var(--spacing-lg)] relative z-1 bg-clip-text leading-[1.1]"
@@ -159,7 +159,7 @@ export default function ThesisPage() {
             backgroundClip: "text",
           }}
         >
-          AI-Powered Brand Name Intelligence
+          AI-powered brand name intelligence
         </h1>
         <p
           className="font-[family-name:var(--font-satoshi)] text-[1.25rem] max-w-[560px] leading-[1.7] relative z-1"
@@ -184,7 +184,7 @@ export default function ThesisPage() {
       >
         <div className="max-w-[720px] w-full">
           <h2 className="font-[family-name:var(--font-clash)] text-[clamp(1.75rem,4vw,2.5rem)] font-bold tracking-[-0.02em] mb-[var(--spacing-xl)] relative inline-block">
-            The Problem
+            The problem
             <span
               className="absolute -bottom-2 left-0 h-[2px] w-12 rounded-full"
               style={{ background: "linear-gradient(90deg, var(--color-accent), transparent)" }}
@@ -206,11 +206,11 @@ export default function ThesisPage() {
                 desc: "Spend weeks manually checking domains, handles, and similar companies across 10+ different websites before picking a name.",
               },
               {
-                title: "Brand Agencies",
+                title: "Brand agencies",
                 desc: "Charge $50K+ for naming projects but still use spreadsheets to track availability across platforms.",
               },
               {
-                title: "Marketing Teams",
+                title: "Marketing teams",
                 desc: "Launch products with names that don't resonate internationally or have embarrassing meanings in other languages.",
               },
             ].map((ex) => (
@@ -274,7 +274,7 @@ export default function ThesisPage() {
       >
         <div className="max-w-[720px] w-full">
           <h2 className="font-[family-name:var(--font-clash)] text-[clamp(1.75rem,4vw,2.5rem)] font-bold tracking-[-0.02em] mb-[var(--spacing-xl)] relative inline-block">
-            Competitive Landscape
+            Competitive landscape
             <span
               className="absolute -bottom-2 left-0 h-[2px] w-12 rounded-full"
               style={{ background: "linear-gradient(90deg, var(--color-accent), transparent)" }}
@@ -327,14 +327,14 @@ export default function ThesisPage() {
               </thead>
               <tbody>
                 {[
-                  ["Domain Check", "✓", "✓", "✓", "✓", "✓"],
-                  ["Social Handles", "✓", "~", "~", "✓", "✓"],
-                  ["Similar Company Search", "✗", "✗", "~", "✗", "✓"],
-                  ["Pronunciation Score", "✗", "✗", "✗", "✗", "✓"],
-                  ["International Check", "✗", "✗", "✗", "✗", "✓"],
-                  ["AI Perception Analysis", "✗", "✗", "✗", "✗", "✓"],
-                  ["Mission Alignment", "✗", "✗", "✗", "✗", "✓"],
-                  ["Unified Scorecard", "✗", "✗", "~", "✗", "✓"],
+                  ["Domain check", "✓", "✓", "✓", "✓", "✓"],
+                  ["Social handles", "✓", "~", "~", "✓", "✓"],
+                  ["Similar company search", "✗", "✗", "~", "✗", "✓"],
+                  ["Pronunciation score", "✗", "✗", "✗", "✗", "✓"],
+                  ["International check", "✗", "✗", "✗", "✗", "✓"],
+                  ["AI perception analysis", "✗", "✗", "✗", "✗", "✓"],
+                  ["Mission alignment", "✗", "✗", "✗", "✗", "✓"],
+                  ["Unified scorecard", "✗", "✗", "~", "✗", "✓"],
                 ].map((row) => (
                   <tr
                     key={row[0]}
@@ -419,7 +419,7 @@ export default function ThesisPage() {
       >
         <div className="max-w-[720px] w-full">
           <h2 className="font-[family-name:var(--font-clash)] text-[clamp(1.75rem,4vw,2.5rem)] font-bold tracking-[-0.02em] mb-[var(--spacing-xl)] relative inline-block">
-            The Gap
+            The gap
             <span
               className="absolute -bottom-2 left-0 h-[2px] w-12 rounded-full"
               style={{ background: "linear-gradient(90deg, var(--color-accent), transparent)" }}
@@ -450,7 +450,7 @@ export default function ThesisPage() {
               }}
             >
               <h3 className="font-[family-name:var(--font-clash)] text-[1.1rem] font-semibold mb-[var(--spacing-md)]" style={{ color: "var(--color-accent)" }}>
-                What Teams Need
+                What teams need
               </h3>
               <ul className="list-none p-0">
                 {[
@@ -478,7 +478,7 @@ export default function ThesisPage() {
               }}
             >
               <h3 className="font-[family-name:var(--font-clash)] text-[1.1rem] font-semibold mb-[var(--spacing-md)]" style={{ color: "var(--color-text-muted)" }}>
-                What Exists Today
+                What exists today
               </h3>
               <ul className="list-none p-0">
                 {[
@@ -524,7 +524,7 @@ export default function ThesisPage() {
       >
         <div className="max-w-[720px] w-full">
           <h2 className="font-[family-name:var(--font-clash)] text-[clamp(1.75rem,4vw,2.5rem)] font-bold tracking-[-0.02em] mb-[var(--spacing-xl)] relative inline-block">
-            The Product
+            The product
             <span
               className="absolute -bottom-2 left-0 h-[2px] w-12 rounded-full"
               style={{ background: "linear-gradient(90deg, var(--color-accent), transparent)" }}
@@ -543,7 +543,7 @@ export default function ThesisPage() {
           <div className="grid grid-cols-2 gap-[var(--spacing-lg)] my-[var(--spacing-2xl)] max-md:grid-cols-1">
             {[
               {
-                title: "Objective Checks",
+                title: "Objective checks",
                 desc: "Automated verification across all platforms.",
                 items: [
                   "Domain availability (20+ TLDs)",
@@ -553,7 +553,7 @@ export default function ThesisPage() {
                 ],
               },
               {
-                title: "Linguistic Analysis",
+                title: "Linguistic analysis",
                 desc: "Phonetic and international evaluation.",
                 items: [
                   "Pronunciation difficulty score",
@@ -563,7 +563,7 @@ export default function ThesisPage() {
                 ],
               },
               {
-                title: "AI Perception",
+                title: "AI perception",
                 desc: "LLM-powered brand fit analysis.",
                 items: [
                   '"What does this name evoke?"',
@@ -573,7 +573,7 @@ export default function ThesisPage() {
                 ],
               },
               {
-                title: "Unified Scorecard",
+                title: "Unified scorecard",
                 desc: "One score to compare all candidates.",
                 items: [
                   "Weighted composite score (0-100)",
@@ -630,7 +630,7 @@ export default function ThesisPage() {
       >
         <div className="max-w-[720px] w-full">
           <h2 className="font-[family-name:var(--font-clash)] text-[clamp(1.75rem,4vw,2.5rem)] font-bold tracking-[-0.02em] mb-[var(--spacing-xl)] relative inline-block">
-            Business Model
+            Business model
             <span
               className="absolute -bottom-2 left-0 h-[2px] w-12 rounded-full"
               style={{ background: "linear-gradient(90deg, var(--color-accent), transparent)" }}
@@ -753,7 +753,7 @@ export default function ThesisPage() {
           }}
         />
         <h2 className="font-[family-name:var(--font-clash)] text-[clamp(1.75rem,4vw,2.5rem)] mb-[var(--spacing-md)] relative z-1">
-          Ready to Forecast?
+          Ready to forecast?
         </h2>
         <p
           className="font-[family-name:var(--font-satoshi)] text-[1.15rem] mb-[var(--spacing-xl)] relative z-1"
@@ -771,7 +771,7 @@ export default function ThesisPage() {
                 "0 0 0 1px rgba(6, 182, 212, 0.5), 0 4px 20px -4px rgba(6, 182, 212, 0.4)",
             }}
           >
-            Consult the Oracle
+            Consult the oracle
           </Link>
           <a
             href="mailto:hello@namecast.ai"
@@ -782,7 +782,7 @@ export default function ThesisPage() {
               border: "1px solid var(--color-border)",
             }}
           >
-            Get in Touch
+            Get in touch
           </a>
         </div>
       </section>

@@ -313,7 +313,7 @@ export default function HomePage() {
                 animation: "pulse-dot 2s ease-in-out infinite",
               }}
             />
-            Brand Name Oracle
+            Brand name oracle
           </div>
 
           {/* Heading */}
@@ -330,11 +330,11 @@ export default function HomePage() {
                 backgroundClip: "text",
               }}
             >
-              Forecast Your Name&apos;s
+              Forecast your name&apos;s
             </span>
             <br />
             <span className="relative inline-block">
-              Future Success
+              Future success
               <span
                 className="absolute bottom-[0.1em] left-0 right-0 h-[0.15em] opacity-60 -skew-x-12"
                 style={{ background: "linear-gradient(90deg, var(--color-accent), var(--color-gold))" }}
@@ -1050,7 +1050,7 @@ export default function HomePage() {
             className="font-[family-name:var(--font-satoshi)] text-[0.8rem] no-underline transition-all duration-200 hover:text-[var(--color-accent)]"
             style={{ color: "var(--color-text-secondary)" }}
           >
-            Python Package
+            Python package
           </a>
           <span className="text-[0.5rem]" style={{ color: "var(--color-border-glow)" }}>
             &#9670;
@@ -1060,7 +1060,7 @@ export default function HomePage() {
             className="font-[family-name:var(--font-satoshi)] text-[0.8rem] no-underline transition-all duration-200 hover:text-[var(--color-accent)]"
             style={{ color: "var(--color-text-secondary)" }}
           >
-            Claude Code Plugin
+            Claude Code plugin
           </a>
         </div>
         <p
@@ -1195,7 +1195,7 @@ function CandidateRow({
                     { label: "Pronunciation", value: Math.round(eval_.pronunciation_score) },
                     { label: "International", value: eval_.international_score },
                     ...(eval_.brand_scope_score !== undefined
-                      ? [{ label: "Brand Scope", value: Math.round(eval_.brand_scope_score) }]
+                      ? [{ label: "Brand scope", value: Math.round(eval_.brand_scope_score) }]
                       : []),
                     ...(eval_.similar_companies_score !== undefined
                       ? [{ label: "Uniqueness", value: Math.round(eval_.similar_companies_score) }]
@@ -1242,11 +1242,11 @@ function CandidateRow({
                     {eval_.pronunciation.syllables}
                   </p>
                   <p className="my-[var(--spacing-xs)]">
-                    <strong style={{ color: "var(--color-text-primary)" }}>Spelling Difficulty:</strong>{" "}
+                    <strong style={{ color: "var(--color-text-primary)" }}>Spelling difficulty:</strong>{" "}
                     {eval_.pronunciation.spelling_difficulty}
                   </p>
                   <p className="my-[var(--spacing-xs)]">
-                    <strong style={{ color: "var(--color-text-primary)" }}>Phonetic Score:</strong>{" "}
+                    <strong style={{ color: "var(--color-text-primary)" }}>Phonetic score:</strong>{" "}
                     {eval_.pronunciation.score}/10
                   </p>
                 </div>
@@ -1260,7 +1260,7 @@ function CandidateRow({
                     {eval_.perception.evokes}
                   </p>
                   <p className="my-[var(--spacing-xs)]">
-                    <strong style={{ color: "var(--color-text-primary)" }}>Industry Association:</strong>{" "}
+                    <strong style={{ color: "var(--color-text-primary)" }}>Industry association:</strong>{" "}
                     {eval_.perception.industry_association.join(", ")}
                   </p>
                   <p className="my-[var(--spacing-xs)]">
@@ -1275,7 +1275,7 @@ function CandidateRow({
                 <DetailSection title="Similar companies">
                   <div className="text-[0.85rem]" style={{ color: "var(--color-text-secondary)" }}>
                     <p className="my-[var(--spacing-xs)]">
-                      <strong style={{ color: "var(--color-text-primary)" }}>Confusion Risk:</strong>{" "}
+                      <strong style={{ color: "var(--color-text-primary)" }}>Confusion risk:</strong>{" "}
                       {eval_.similar_companies?.confusion_risk || "Unknown"}
                     </p>
                     {eval_.similar_companies?.matches &&
@@ -1318,11 +1318,11 @@ function CandidateRow({
                       {eval_.brand_scope.narrowness}/10 (lower = more flexible)
                     </p>
                     <p className="my-[var(--spacing-xs)]">
-                      <strong style={{ color: "var(--color-text-primary)" }}>Expansion Potential:</strong>{" "}
+                      <strong style={{ color: "var(--color-text-primary)" }}>Expansion potential:</strong>{" "}
                       {eval_.brand_scope.expansion_potential}/10
                     </p>
                     <p className="my-[var(--spacing-xs)]">
-                      <strong style={{ color: "var(--color-text-primary)" }}>Vision Alignment:</strong>{" "}
+                      <strong style={{ color: "var(--color-text-primary)" }}>Vision alignment:</strong>{" "}
                       {eval_.brand_scope.vision_alignment}/10
                     </p>
                     <p
