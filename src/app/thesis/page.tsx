@@ -41,15 +41,16 @@ export default function ThesisPage() {
     >
       {/* Top Navigation */}
       <nav
-        className="fixed top-0 left-0 right-0 h-16 flex items-center px-[var(--spacing-lg)] backdrop-blur-[20px] z-100"
+        className="fixed top-0 left-0 right-0 h-16 flex items-center px-[var(--spacing-lg)] backdrop-blur-[24px] z-100"
         style={{
-          background: "rgba(6, 6, 12, 0.9)",
-          borderBottom: "1px solid var(--color-border)",
+          background: "rgba(6, 6, 12, 0.88)",
+          borderBottom: "1px solid rgba(30, 30, 69, 0.5)",
+          boxShadow: "0 1px 0 rgba(6, 182, 212, 0.04)",
         }}
       >
         <a
           href="/"
-          className="flex items-center gap-[var(--spacing-sm)] font-[family-name:var(--font-display)] text-[1.125rem] font-semibold no-underline tracking-[-0.02em] transition-opacity duration-[var(--duration-fast)] hover:opacity-70"
+          className="flex items-center gap-[var(--spacing-sm)] font-[family-name:var(--font-display)] text-[1.125rem] font-semibold no-underline tracking-[-0.02em] transition-opacity duration-200 hover:opacity-80"
           style={{ color: "var(--color-text-primary)" }}
         >
           <svg
@@ -80,17 +81,17 @@ export default function ThesisPage() {
 
       {/* Section Navigation */}
       <nav
-        className="fixed top-20 left-1/2 -translate-x-1/2 flex gap-1 p-1.5 backdrop-blur-[20px] rounded-[var(--radius-2xl)] z-50 max-md:top-auto max-md:bottom-[var(--spacing-md)] max-md:flex-wrap max-md:max-w-[95%] max-md:justify-center max-md:p-1"
+        className="fixed top-20 left-1/2 -translate-x-1/2 flex gap-0.5 p-1 backdrop-blur-[24px] rounded-full z-50 max-md:top-auto max-md:bottom-[var(--spacing-md)] max-md:flex-wrap max-md:max-w-[95%] max-md:justify-center max-md:rounded-[var(--radius-2xl)]"
         style={{
-          background: "rgba(12, 12, 22, 0.95)",
-          border: "1px solid var(--color-border)",
-          boxShadow: "0 8px 32px rgba(0, 0, 0, 0.4)",
+          background: "rgba(8, 8, 18, 0.92)",
+          border: "1px solid rgba(30, 30, 69, 0.5)",
+          boxShadow: "0 8px 32px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.03)",
         }}
       >
         {sections.map((section) => (
           <button
             key={section}
-            className="py-2.5 px-4 font-[family-name:var(--font-satoshi)] text-[0.8rem] font-medium border-none rounded-[var(--radius-xl)] cursor-pointer transition-all duration-[var(--duration-fast)] whitespace-nowrap max-md:py-2 max-md:px-3 max-md:text-[0.75rem]"
+            className="py-2 px-5 font-[family-name:var(--font-satoshi)] text-[0.8rem] font-medium border-none rounded-full cursor-pointer transition-all duration-200 whitespace-nowrap max-md:py-2 max-md:px-3 max-md:text-[0.75rem]"
             style={{
               background:
                 activeSection === section
@@ -100,12 +101,16 @@ export default function ThesisPage() {
                 activeSection === section
                   ? "white"
                   : "var(--color-text-muted)",
+              boxShadow:
+                activeSection === section
+                  ? "0 2px 12px -2px rgba(6, 182, 212, 0.4)"
+                  : "none",
             }}
             onClick={() => scrollToSection(section)}
             onMouseEnter={(e) => {
               if (activeSection !== section) {
                 e.currentTarget.style.color = "var(--color-text-primary)";
-                e.currentTarget.style.background = "var(--color-bg-card)";
+                e.currentTarget.style.background = "rgba(30, 30, 69, 0.5)";
               }
             }}
             onMouseLeave={(e) => {
@@ -122,25 +127,32 @@ export default function ThesisPage() {
 
       {/* Hero */}
       <header className="min-h-[70vh] flex flex-col justify-center items-center text-center pt-[140px] pb-[var(--spacing-4xl)] px-[var(--spacing-lg)] relative">
-        {/* Glow */}
+        {/* Multi-layer glow */}
         <div
-          className="absolute w-[600px] h-[600px] rounded-full top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none opacity-50"
+          className="absolute w-[700px] h-[700px] rounded-full top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none"
           style={{
-            background:
-              "radial-gradient(ellipse at center, var(--color-accent-glow) 0%, transparent 70%)",
+            background: `
+              radial-gradient(ellipse at 40% 40%, rgba(6, 182, 212, 0.2) 0%, transparent 50%),
+              radial-gradient(ellipse at 60% 60%, rgba(99, 102, 241, 0.12) 0%, transparent 50%)`,
+            filter: "blur(40px)",
+            animation: "cosmic-pulse 15s ease-in-out infinite",
           }}
         />
         <span
-          className="font-[family-name:var(--font-mono)] text-[0.75rem] font-medium uppercase tracking-[0.25em] mb-[var(--spacing-md)] relative z-1"
-          style={{ color: "var(--color-accent)" }}
+          className="font-[family-name:var(--font-mono)] text-[0.75rem] font-medium uppercase tracking-[0.25em] mb-[var(--spacing-md)] relative z-1 py-1.5 px-4 rounded-full"
+          style={{
+            color: "var(--color-accent)",
+            background: "rgba(6, 182, 212, 0.08)",
+            border: "1px solid rgba(6, 182, 212, 0.2)",
+          }}
         >
           Investment Thesis
         </span>
         <h1
-          className="font-[family-name:var(--font-clash)] text-[clamp(2.5rem,7vw,4.5rem)] font-bold tracking-[-0.03em] mb-[var(--spacing-lg)] relative z-1 bg-clip-text"
+          className="font-[family-name:var(--font-clash)] text-[clamp(2.5rem,7vw,4.5rem)] font-bold tracking-[-0.03em] mb-[var(--spacing-lg)] relative z-1 bg-clip-text leading-[1.1]"
           style={{
             background:
-              "linear-gradient(135deg, var(--color-text-primary) 0%, var(--color-text-primary) 50%, var(--color-accent) 100%)",
+              "linear-gradient(135deg, var(--color-text-primary) 0%, var(--color-text-primary) 40%, var(--color-accent) 80%, var(--color-gold) 100%)",
             WebkitBackgroundClip: "text",
             WebkitTextFillColor: "transparent",
             backgroundClip: "text",
@@ -149,7 +161,7 @@ export default function ThesisPage() {
           AI-Powered Brand Name Intelligence
         </h1>
         <p
-          className="font-[family-name:var(--font-satoshi)] text-[1.25rem] max-w-[550px] leading-[1.7] relative z-1"
+          className="font-[family-name:var(--font-satoshi)] text-[1.25rem] max-w-[560px] leading-[1.7] relative z-1"
           style={{ color: "var(--color-text-secondary)" }}
         >
           The market for brand naming is fragmented across dozens of tools. None
@@ -157,8 +169,8 @@ export default function ThesisPage() {
           analysis. We&apos;re building the unified scorecard.
         </p>
         <p
-          className="font-[family-name:var(--font-satoshi)] text-[0.9rem] mt-[var(--spacing-xl)] relative z-1"
-          style={{ color: "var(--color-text-muted)" }}
+          className="font-[family-name:var(--font-mono)] text-[0.8rem] mt-[var(--spacing-xl)] relative z-1 tracking-[0.05em]"
+          style={{ color: "var(--color-text-faint)" }}
         >
           December 2024 &middot; Namecast
         </p>
@@ -170,8 +182,12 @@ export default function ThesisPage() {
         className="min-h-screen py-[var(--spacing-4xl)] px-[var(--spacing-lg)] flex flex-col items-center max-md:min-h-0 max-md:py-[var(--spacing-3xl)] max-md:px-[var(--spacing-md)]"
       >
         <div className="max-w-[720px] w-full">
-          <h2 className="font-[family-name:var(--font-clash)] text-[clamp(1.75rem,4vw,2.5rem)] font-bold tracking-[-0.02em] mb-[var(--spacing-xl)]">
+          <h2 className="font-[family-name:var(--font-clash)] text-[clamp(1.75rem,4vw,2.5rem)] font-bold tracking-[-0.02em] mb-[var(--spacing-xl)] relative inline-block">
             The Problem
+            <span
+              className="absolute -bottom-2 left-0 h-[2px] w-12 rounded-full"
+              style={{ background: "linear-gradient(90deg, var(--color-accent), transparent)" }}
+            />
           </h2>
 
           <p
@@ -199,14 +215,14 @@ export default function ThesisPage() {
             ].map((ex) => (
               <div
                 key={ex.title}
-                className="p-[var(--spacing-lg)] rounded-[var(--radius-lg)] transition-all duration-[var(--duration-fast)] hover:-translate-y-0.5"
+                className="p-[var(--spacing-lg)] rounded-[var(--radius-lg)] transition-all duration-300 hover:-translate-y-1 border-hover-glow group"
                 style={{
                   background: "var(--color-bg-card)",
                   border: "1px solid var(--color-border)",
                 }}
               >
                 <h4
-                  className="font-[family-name:var(--font-clash)] text-[0.8rem] font-semibold uppercase tracking-[0.1em] mb-[var(--spacing-sm)]"
+                  className="font-[family-name:var(--font-clash)] text-[0.8rem] font-semibold uppercase tracking-[0.1em] mb-[var(--spacing-sm)] transition-colors duration-200 group-hover:text-[var(--color-accent-bright)]"
                   style={{ color: "var(--color-accent)" }}
                 >
                   {ex.title}
@@ -256,8 +272,12 @@ export default function ThesisPage() {
         className="min-h-screen py-[var(--spacing-4xl)] px-[var(--spacing-lg)] flex flex-col items-center max-md:min-h-0 max-md:py-[var(--spacing-3xl)] max-md:px-[var(--spacing-md)]"
       >
         <div className="max-w-[720px] w-full">
-          <h2 className="font-[family-name:var(--font-clash)] text-[clamp(1.75rem,4vw,2.5rem)] font-bold tracking-[-0.02em] mb-[var(--spacing-xl)]">
+          <h2 className="font-[family-name:var(--font-clash)] text-[clamp(1.75rem,4vw,2.5rem)] font-bold tracking-[-0.02em] mb-[var(--spacing-xl)] relative inline-block">
             Competitive Landscape
+            <span
+              className="absolute -bottom-2 left-0 h-[2px] w-12 rounded-full"
+              style={{ background: "linear-gradient(90deg, var(--color-accent), transparent)" }}
+            />
           </h2>
 
           <p
@@ -270,8 +290,11 @@ export default function ThesisPage() {
 
           {/* Competitive Table */}
           <div
-            className="overflow-x-auto my-[var(--spacing-xl)] rounded-[var(--radius-lg)]"
-            style={{ border: "1px solid var(--color-border)" }}
+            className="overflow-x-auto my-[var(--spacing-xl)] rounded-[var(--radius-xl)]"
+            style={{
+              border: "1px solid var(--color-border)",
+              boxShadow: "0 4px 24px -8px rgba(0, 0, 0, 0.3)",
+            }}
           >
             <table className="w-full border-collapse font-[family-name:var(--font-satoshi)] text-[0.9rem]">
               <thead>
@@ -367,13 +390,13 @@ export default function ThesisPage() {
             ].map((c) => (
               <div
                 key={c.name}
-                className="p-[var(--spacing-lg)] rounded-[var(--radius-lg)] transition-all duration-[var(--duration-fast)]"
+                className="p-[var(--spacing-lg)] rounded-[var(--radius-lg)] transition-all duration-300 border-hover-glow"
                 style={{
                   background: "var(--color-bg-elevated)",
                   border: "1px solid var(--color-border)",
                 }}
               >
-                <h4 className="font-[family-name:var(--font-clash)] text-base mb-[var(--spacing-sm)]">
+                <h4 className="font-[family-name:var(--font-clash)] text-base font-semibold mb-[var(--spacing-sm)]">
                   {c.name}
                 </h4>
                 <p
@@ -394,8 +417,12 @@ export default function ThesisPage() {
         className="min-h-screen py-[var(--spacing-4xl)] px-[var(--spacing-lg)] flex flex-col items-center max-md:min-h-0 max-md:py-[var(--spacing-3xl)] max-md:px-[var(--spacing-md)]"
       >
         <div className="max-w-[720px] w-full">
-          <h2 className="font-[family-name:var(--font-clash)] text-[clamp(1.75rem,4vw,2.5rem)] font-bold tracking-[-0.02em] mb-[var(--spacing-xl)]">
+          <h2 className="font-[family-name:var(--font-clash)] text-[clamp(1.75rem,4vw,2.5rem)] font-bold tracking-[-0.02em] mb-[var(--spacing-xl)] relative inline-block">
             The Gap
+            <span
+              className="absolute -bottom-2 left-0 h-[2px] w-12 rounded-full"
+              style={{ background: "linear-gradient(90deg, var(--color-accent), transparent)" }}
+            />
           </h2>
 
           <p
@@ -415,13 +442,13 @@ export default function ThesisPage() {
 
           <div className="grid grid-cols-2 gap-[var(--spacing-lg)] my-[var(--spacing-2xl)] max-md:grid-cols-1">
             <div
-              className="p-[var(--spacing-lg)] rounded-[var(--radius-lg)]"
+              className="p-[var(--spacing-xl)] rounded-[var(--radius-xl)]"
               style={{
                 background: "var(--color-bg-card)",
                 border: "1px solid var(--color-border)",
               }}
             >
-              <h3 className="font-[family-name:var(--font-clash)] text-[1.1rem] mb-[var(--spacing-md)]">
+              <h3 className="font-[family-name:var(--font-clash)] text-[1.1rem] font-semibold mb-[var(--spacing-md)]" style={{ color: "var(--color-accent)" }}>
                 What Teams Need
               </h3>
               <ul className="list-none p-0">
@@ -443,13 +470,13 @@ export default function ThesisPage() {
               </ul>
             </div>
             <div
-              className="p-[var(--spacing-lg)] rounded-[var(--radius-lg)]"
+              className="p-[var(--spacing-xl)] rounded-[var(--radius-xl)]"
               style={{
                 background: "var(--color-bg-elevated)",
                 border: "1px solid var(--color-border)",
               }}
             >
-              <h3 className="font-[family-name:var(--font-clash)] text-[1.1rem] mb-[var(--spacing-md)]">
+              <h3 className="font-[family-name:var(--font-clash)] text-[1.1rem] font-semibold mb-[var(--spacing-md)]" style={{ color: "var(--color-text-muted)" }}>
                 What Exists Today
               </h3>
               <ul className="list-none p-0">
@@ -473,13 +500,16 @@ export default function ThesisPage() {
           </div>
 
           <div
-            className="p-[var(--spacing-lg)] rounded-r-[var(--radius-lg)] mt-[var(--spacing-lg)] text-[1.1rem]"
+            className="p-[var(--spacing-xl)] rounded-[var(--radius-lg)] mt-[var(--spacing-lg)] text-[1.1rem] relative overflow-hidden"
             style={{
-              background: "var(--color-accent-glow)",
+              background: "linear-gradient(135deg, rgba(6, 182, 212, 0.08) 0%, rgba(99, 102, 241, 0.06) 100%)",
               borderLeft: "3px solid var(--color-accent)",
+              border: "1px solid rgba(6, 182, 212, 0.2)",
+              borderLeftWidth: "3px",
+              borderLeftColor: "var(--color-accent)",
             }}
           >
-            <strong>The gap:</strong> No one has built LLM-powered perception
+            <strong style={{ color: "var(--color-accent)" }}>The gap:</strong> No one has built LLM-powered perception
             analysis into an automated brand evaluation scorecard. This is the
             missing piece that unifies all the fragmented tools.
           </div>
@@ -492,8 +522,12 @@ export default function ThesisPage() {
         className="min-h-screen py-[var(--spacing-4xl)] px-[var(--spacing-lg)] flex flex-col items-center max-md:min-h-0 max-md:py-[var(--spacing-3xl)] max-md:px-[var(--spacing-md)]"
       >
         <div className="max-w-[720px] w-full">
-          <h2 className="font-[family-name:var(--font-clash)] text-[clamp(1.75rem,4vw,2.5rem)] font-bold tracking-[-0.02em] mb-[var(--spacing-xl)]">
+          <h2 className="font-[family-name:var(--font-clash)] text-[clamp(1.75rem,4vw,2.5rem)] font-bold tracking-[-0.02em] mb-[var(--spacing-xl)] relative inline-block">
             The Product
+            <span
+              className="absolute -bottom-2 left-0 h-[2px] w-12 rounded-full"
+              style={{ background: "linear-gradient(90deg, var(--color-accent), transparent)" }}
+            />
           </h2>
 
           <p
@@ -550,13 +584,13 @@ export default function ThesisPage() {
             ].map((f) => (
               <div
                 key={f.title}
-                className="p-[var(--spacing-xl)] rounded-[var(--radius-lg)] transition-all duration-[var(--duration-fast)]"
+                className="p-[var(--spacing-xl)] rounded-[var(--radius-xl)] transition-all duration-300 border-hover-glow group"
                 style={{
                   background: "var(--color-bg-card)",
                   border: "1px solid var(--color-border)",
                 }}
               >
-                <h3 className="font-[family-name:var(--font-clash)] text-[1.15rem] mb-[var(--spacing-sm)]">
+                <h3 className="font-[family-name:var(--font-clash)] text-[1.15rem] font-semibold mb-[var(--spacing-xs)] tracking-[-0.01em]">
                   {f.title}
                 </h3>
                 <p
@@ -569,14 +603,14 @@ export default function ThesisPage() {
                   {f.items.map((item) => (
                     <li
                       key={item}
-                      className="text-[0.9rem] mb-[var(--spacing-xs)] pl-[var(--spacing-md)] relative"
+                      className="text-[0.9rem] mb-[var(--spacing-xs)] pl-[var(--spacing-lg)] relative"
                       style={{ color: "var(--color-text-secondary)" }}
                     >
                       <span
-                        className="absolute left-0 font-[family-name:var(--font-mono)]"
+                        className="absolute left-0 text-[0.75rem] top-[0.2em] transition-transform duration-200 group-hover:translate-x-0.5"
                         style={{ color: "var(--color-accent)" }}
                       >
-                        &rarr;
+                        &#10095;
                       </span>
                       {item}
                     </li>
@@ -594,8 +628,12 @@ export default function ThesisPage() {
         className="min-h-screen py-[var(--spacing-4xl)] px-[var(--spacing-lg)] flex flex-col items-center max-md:min-h-0 max-md:py-[var(--spacing-3xl)] max-md:px-[var(--spacing-md)]"
       >
         <div className="max-w-[720px] w-full">
-          <h2 className="font-[family-name:var(--font-clash)] text-[clamp(1.75rem,4vw,2.5rem)] font-bold tracking-[-0.02em] mb-[var(--spacing-xl)]">
+          <h2 className="font-[family-name:var(--font-clash)] text-[clamp(1.75rem,4vw,2.5rem)] font-bold tracking-[-0.02em] mb-[var(--spacing-xl)] relative inline-block">
             Business Model
+            <span
+              className="absolute -bottom-2 left-0 h-[2px] w-12 rounded-full"
+              style={{ background: "linear-gradient(90deg, var(--color-accent), transparent)" }}
+            />
           </h2>
 
           <p
@@ -608,37 +646,51 @@ export default function ThesisPage() {
           </p>
 
           {/* Pricing Stack */}
-          <div className="flex flex-col gap-0.5 my-[var(--spacing-2xl)] rounded-[var(--radius-lg)] overflow-hidden">
+          <div className="flex flex-col gap-1 my-[var(--spacing-2xl)] rounded-[var(--radius-xl)] overflow-hidden">
             {[
               {
                 name: "Free",
                 desc: "5 evaluations/month, basic scorecard",
                 price: "$0",
                 borderColor: "var(--color-success)",
+                glowColor: "rgba(16, 185, 129, 0.06)",
               },
               {
                 name: "Pro",
                 desc: "Unlimited evaluations, full AI analysis, API access",
                 price: "$49/mo",
                 borderColor: "var(--color-accent)",
+                glowColor: "rgba(6, 182, 212, 0.06)",
               },
               {
                 name: "Enterprise",
                 desc: "Custom integrations, bulk evaluation, dedicated support",
                 price: "Custom",
                 borderColor: "var(--color-gold)",
+                glowColor: "rgba(245, 158, 11, 0.06)",
               },
             ].map((tier) => (
               <div
                 key={tier.name}
-                className="flex justify-between items-center py-[var(--spacing-lg)] px-[var(--spacing-xl)] transition-all duration-[var(--duration-fast)] hover:bg-[var(--color-surface)]"
+                className="flex justify-between items-center py-[var(--spacing-lg)] px-[var(--spacing-xl)] transition-all duration-300 group rounded-[var(--radius-md)]"
                 style={{
                   background: "var(--color-bg-card)",
-                  borderLeft: `4px solid ${tier.borderColor}`,
+                  borderLeft: `3px solid ${tier.borderColor}`,
+                  border: `1px solid var(--color-border)`,
+                  borderLeftWidth: "3px",
+                  borderLeftColor: tier.borderColor,
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.background = tier.glowColor;
+                  e.currentTarget.style.borderLeftColor = tier.borderColor;
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.background = "var(--color-bg-card)";
+                  e.currentTarget.style.borderLeftColor = tier.borderColor;
                 }}
               >
                 <div>
-                  <h3 className="font-[family-name:var(--font-clash)] text-base mb-1">
+                  <h3 className="font-[family-name:var(--font-clash)] text-[1.05rem] font-semibold mb-1">
                     {tier.name}
                   </h3>
                   <p
@@ -649,8 +701,8 @@ export default function ThesisPage() {
                   </p>
                 </div>
                 <span
-                  className="font-[family-name:var(--font-mono)] text-[0.95rem] font-semibold"
-                  style={{ color: "var(--color-accent)" }}
+                  className="font-[family-name:var(--font-mono)] text-[1rem] font-semibold ml-[var(--spacing-lg)] whitespace-nowrap"
+                  style={{ color: tier.borderColor }}
                 >
                   {tier.price}
                 </span>
@@ -711,18 +763,18 @@ export default function ThesisPage() {
         <div className="flex justify-center gap-[var(--spacing-md)] relative z-1 max-md:flex-col max-md:items-center">
           <a
             href="/"
-            className="font-[family-name:var(--font-satoshi)] py-[var(--spacing-md)] px-[var(--spacing-xl)] text-[0.95rem] font-semibold rounded-[var(--radius-xl)] no-underline text-white transition-all duration-[var(--duration-normal)] hover:-translate-y-0.5"
+            className="font-[family-name:var(--font-satoshi)] py-[var(--spacing-md)] px-[var(--spacing-2xl)] text-[0.95rem] font-semibold rounded-[var(--radius-xl)] no-underline text-white transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_0_0_1px_rgba(6,182,212,0.6),0_8px_32px_-4px_rgba(6,182,212,0.5)]"
             style={{
-              background: "var(--color-accent)",
+              background: "linear-gradient(135deg, var(--color-accent) 0%, var(--color-accent-dim) 100%)",
               boxShadow:
-                "0 4px 20px -4px rgba(168, 85, 247, 0.5)",
+                "0 0 0 1px rgba(6, 182, 212, 0.5), 0 4px 20px -4px rgba(6, 182, 212, 0.4)",
             }}
           >
             Consult the Oracle
           </a>
           <a
             href="mailto:hello@namecast.ai"
-            className="font-[family-name:var(--font-satoshi)] py-[var(--spacing-md)] px-[var(--spacing-xl)] text-[0.95rem] font-semibold rounded-[var(--radius-xl)] no-underline transition-all duration-[var(--duration-normal)]"
+            className="font-[family-name:var(--font-satoshi)] py-[var(--spacing-md)] px-[var(--spacing-2xl)] text-[0.95rem] font-semibold rounded-[var(--radius-xl)] no-underline transition-all duration-300 hover:-translate-y-0.5 hover:border-[rgba(6,182,212,0.3)] hover:shadow-[0_0_20px_-5px_rgba(6,182,212,0.15)]"
             style={{
               background: "transparent",
               color: "var(--color-text-primary)",

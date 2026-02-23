@@ -227,9 +227,9 @@ export default function HomePage() {
       <nav
         className="fixed top-[var(--spacing-md)] left-1/2 -translate-x-1/2 z-100 backdrop-blur-[20px] rounded-[var(--radius-2xl)] max-sm:top-[var(--spacing-sm)] max-sm:left-[var(--spacing-sm)] max-sm:right-[var(--spacing-sm)] max-sm:translate-x-0"
         style={{
-          background: "rgba(6, 6, 12, 0.8)",
-          border: "1px solid var(--color-border)",
-          boxShadow: "0 0 0 1px rgba(255, 255, 255, 0.03), 0 20px 50px -10px rgba(0, 0, 0, 0.5)",
+          background: "rgba(6, 6, 12, 0.85)",
+          border: "1px solid rgba(30, 30, 69, 0.6)",
+          boxShadow: "0 0 0 1px rgba(255, 255, 255, 0.03), 0 20px 50px -10px rgba(0, 0, 0, 0.5), inset 0 -1px 0 rgba(6, 182, 212, 0.08)",
         }}
       >
         <div className="py-[var(--spacing-sm)] px-[var(--spacing-lg)] flex justify-between items-center gap-[var(--spacing-3xl)] max-sm:px-[var(--spacing-md)] max-sm:gap-[var(--spacing-md)]">
@@ -249,14 +249,14 @@ export default function HomePage() {
           <div className="flex gap-[var(--spacing-xl)] max-sm:gap-[var(--spacing-md)]">
             <a
               href="https://github.com/MaxGhenis/namecast"
-              className="font-[family-name:var(--font-display)] text-[0.875rem] font-medium no-underline relative transition-colors duration-[var(--duration-fast)] hover:text-[var(--color-text-primary)] max-sm:text-[0.8rem]"
+              className="font-[family-name:var(--font-display)] text-[0.875rem] font-medium no-underline relative transition-colors duration-200 hover:text-[var(--color-text-primary)] max-sm:text-[0.8rem] after:content-[''] after:absolute after:bottom-[-4px] after:left-0 after:w-0 after:h-[1px] after:bg-[var(--color-accent)] after:transition-[width] after:duration-300 hover:after:w-full"
               style={{ color: "var(--color-text-muted)" }}
             >
               GitHub
             </a>
             <a
               href="mailto:hello@namecast.ai"
-              className="font-[family-name:var(--font-display)] text-[0.875rem] font-medium no-underline relative transition-colors duration-[var(--duration-fast)] hover:text-[var(--color-text-primary)] max-sm:text-[0.8rem]"
+              className="font-[family-name:var(--font-display)] text-[0.875rem] font-medium no-underline relative transition-colors duration-200 hover:text-[var(--color-text-primary)] max-sm:text-[0.8rem] after:content-[''] after:absolute after:bottom-[-4px] after:left-0 after:w-0 after:h-[1px] after:bg-[var(--color-accent)] after:transition-[width] after:duration-300 hover:after:w-full"
               style={{ color: "var(--color-text-muted)" }}
             >
               Contact
@@ -361,17 +361,17 @@ export default function HomePage() {
           >
             <a
               href="#demo"
-              className="font-[family-name:var(--font-satoshi)] py-[var(--spacing-md)] px-[var(--spacing-xl)] text-[0.95rem] font-semibold rounded-[var(--radius-xl)] no-underline cursor-pointer relative overflow-hidden text-white transition-all duration-[var(--duration-normal)] hover:-translate-y-0.5 max-[480px]:w-full max-[480px]:text-center"
+              className="font-[family-name:var(--font-satoshi)] py-[var(--spacing-md)] px-[var(--spacing-xl)] text-[0.95rem] font-semibold rounded-[var(--radius-xl)] no-underline cursor-pointer relative overflow-hidden text-white transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_0_0_1px_rgba(6,182,212,0.6),0_8px_32px_-4px_rgba(6,182,212,0.6),inset_0_1px_0_rgba(255,255,255,0.25)] max-[480px]:w-full max-[480px]:text-center"
               style={{
                 background: "linear-gradient(135deg, var(--color-accent) 0%, var(--color-accent-dim) 100%)",
-                boxShadow: "0 0 0 1px rgba(6, 182, 212, 0.5), 0 4px 24px -4px rgba(6, 182, 212, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.2)",
+                boxShadow: "0 0 0 1px rgba(6, 182, 212, 0.5), 0 4px 24px -4px rgba(6, 182, 212, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.2)",
               }}
             >
               Try the demo
             </a>
             <a
               href="https://github.com/MaxGhenis/namecast"
-              className="font-[family-name:var(--font-satoshi)] py-[var(--spacing-md)] px-[var(--spacing-xl)] text-[0.95rem] font-semibold rounded-[var(--radius-xl)] no-underline cursor-pointer transition-all duration-[var(--duration-normal)] hover:-translate-y-0.5 max-[480px]:w-full max-[480px]:text-center"
+              className="font-[family-name:var(--font-satoshi)] py-[var(--spacing-md)] px-[var(--spacing-xl)] text-[0.95rem] font-semibold rounded-[var(--radius-xl)] no-underline cursor-pointer transition-all duration-300 hover:-translate-y-0.5 hover:border-[rgba(6,182,212,0.3)] hover:shadow-[0_0_20px_-5px_rgba(6,182,212,0.15)] max-[480px]:w-full max-[480px]:text-center"
               style={{
                 background: "transparent",
                 color: "var(--color-text-primary)",
@@ -434,7 +434,7 @@ export default function HomePage() {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="Enter access password..."
-                className="flex-1 py-[var(--spacing-sm)] px-[var(--spacing-md)] font-[family-name:var(--font-satoshi)] text-[0.9rem] rounded-[var(--radius-md)] outline-none transition-all duration-[var(--duration-fast)] focus:shadow-[0_0_0_3px_var(--color-accent-glow)]"
+                className="flex-1 py-[var(--spacing-sm)] px-[var(--spacing-md)] font-[family-name:var(--font-satoshi)] text-[0.9rem] rounded-[var(--radius-md)] outline-none transition-all duration-200 focus:shadow-[0_0_0_2px_rgba(245,158,11,0.2),0_0_16px_-4px_rgba(245,158,11,0.1)] focus:border-[rgba(245,158,11,0.4)]"
                 style={{
                   background: "var(--color-bg)",
                   border: "1px solid var(--color-border)",
@@ -458,7 +458,7 @@ export default function HomePage() {
                 setError(null);
               }}
               placeholder="Describe your project, company, or product... (e.g., 'A SaaS tool for tracking carbon emissions for small businesses')"
-              className="w-full py-[var(--spacing-md)] px-[var(--spacing-lg)] font-[family-name:var(--font-satoshi)] text-base rounded-[var(--radius-lg)] resize-y min-h-[80px] outline-none transition-all duration-[var(--duration-fast)] focus:shadow-[0_0_0_3px_var(--color-accent-glow)]"
+              className="w-full py-[var(--spacing-md)] px-[var(--spacing-lg)] font-[family-name:var(--font-satoshi)] text-base rounded-[var(--radius-lg)] resize-y min-h-[80px] outline-none transition-all duration-200 focus:shadow-[0_0_0_2px_rgba(6,182,212,0.25),0_0_20px_-5px_rgba(6,182,212,0.15)] focus:border-[rgba(6,182,212,0.4)]"
               style={{
                 background: "var(--color-bg)",
                 border: "1px solid var(--color-border)",
@@ -476,7 +476,7 @@ export default function HomePage() {
                 setError(null);
               }}
               placeholder="Your name ideas (optional, comma-separated)..."
-              className="py-[var(--spacing-md)] px-[var(--spacing-lg)] font-[family-name:var(--font-satoshi)] text-[1.1rem] rounded-[var(--radius-lg)] outline-none transition-all duration-[var(--duration-fast)] focus:shadow-[0_0_0_3px_var(--color-accent-glow)]"
+              className="py-[var(--spacing-md)] px-[var(--spacing-lg)] font-[family-name:var(--font-satoshi)] text-[1.05rem] rounded-[var(--radius-lg)] outline-none transition-all duration-200 focus:shadow-[0_0_0_2px_rgba(6,182,212,0.25),0_0_20px_-5px_rgba(6,182,212,0.15)] focus:border-[rgba(6,182,212,0.4)]"
               style={{
                 background: "var(--color-bg)",
                 border: "1px solid var(--color-border)",
@@ -486,45 +486,62 @@ export default function HomePage() {
 
             <button
               onClick={handleSubmit}
-              className="w-full py-[var(--spacing-md)] px-[var(--spacing-xl)] font-[family-name:var(--font-satoshi)] text-[0.95rem] font-semibold text-white border-none rounded-[var(--radius-lg)] cursor-pointer transition-all duration-[var(--duration-fast)] whitespace-nowrap hover:brightness-110 disabled:opacity-50 disabled:cursor-not-allowed"
-              style={{ background: "var(--color-accent)" }}
+              className="w-full py-[var(--spacing-md)] px-[var(--spacing-xl)] font-[family-name:var(--font-satoshi)] text-[0.95rem] font-semibold text-white border-none rounded-[var(--radius-lg)] cursor-pointer transition-all duration-300 whitespace-nowrap hover:shadow-[0_0_30px_-5px_rgba(6,182,212,0.5)] hover:brightness-110 disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:shadow-none disabled:hover:brightness-100 relative overflow-hidden"
+              style={{
+                background: "linear-gradient(135deg, var(--color-accent) 0%, var(--color-accent-dim) 100%)",
+                boxShadow: "0 2px 16px -4px rgba(6, 182, 212, 0.4)",
+              }}
               disabled={isLoading || !projectDescription.trim()}
             >
-              {isLoading ? "Evaluating..." : "Evaluate names"}
+              {isLoading ? (
+                <span className="inline-flex items-center gap-2">
+                  <span
+                    className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full inline-block"
+                    style={{ animation: "spin 0.8s linear infinite" }}
+                  />
+                  Evaluating...
+                </span>
+              ) : (
+                "Evaluate names"
+              )}
             </button>
           </div>
 
           {/* Progress indicator */}
           {isLoading && (
             <div
-              className="mt-[var(--spacing-lg)] p-[var(--spacing-lg)] rounded-[var(--radius-lg)]"
+              className="mt-[var(--spacing-lg)] p-[var(--spacing-lg)] rounded-[var(--radius-lg)] relative overflow-hidden"
               style={{
                 background: "rgba(15, 23, 42, 0.6)",
-                border: "1px solid var(--color-border)",
+                border: "1px solid rgba(6, 182, 212, 0.2)",
+                animation: "glow-border 3s ease-in-out infinite",
               }}
             >
+              {/* Subtle shimmer overlay */}
+              <div className="absolute inset-0 shimmer pointer-events-none" />
               <div
-                className="text-[0.9rem] font-medium mb-[var(--spacing-sm)]"
+                className="text-[0.9rem] font-medium mb-[var(--spacing-sm)] relative"
                 style={{ color: "var(--color-accent)" }}
               >
                 {progressMessage || "Starting..."}
               </div>
               {progressTotal > 0 && (
                 <div
-                  className="h-1 rounded-sm overflow-hidden mb-[var(--spacing-md)]"
-                  style={{ background: "rgba(6, 182, 212, 0.2)" }}
+                  className="h-1.5 rounded-full overflow-hidden mb-[var(--spacing-md)] relative"
+                  style={{ background: "rgba(6, 182, 212, 0.1)" }}
                 >
                   <div
-                    className="h-full rounded-sm transition-[width] duration-300 ease-linear"
+                    className="h-full rounded-full transition-[width] duration-500 ease-out relative"
                     style={{
                       width: `${(progressCurrent / progressTotal) * 100}%`,
-                      background: "linear-gradient(90deg, var(--color-accent), var(--color-gold))",
+                      background: "linear-gradient(90deg, var(--color-accent), var(--color-accent-bright), var(--color-gold))",
+                      boxShadow: "0 0 12px rgba(6, 182, 212, 0.5)",
                     }}
                   />
                 </div>
               )}
               {candidateNames.length > 0 && (
-                <div className="flex flex-wrap items-center gap-[var(--spacing-xs)] mt-[var(--spacing-sm)]">
+                <div className="flex flex-wrap items-center gap-[var(--spacing-xs)] mt-[var(--spacing-sm)] relative">
                   <span
                     className="text-[0.75rem] uppercase tracking-[0.05em]"
                     style={{ color: "var(--color-text-muted)" }}
@@ -534,10 +551,12 @@ export default function HomePage() {
                   {candidateNames.slice(0, 6).map((name, i) => (
                     <span
                       key={i}
-                      className="text-[0.8rem] py-0.5 px-2 rounded-[var(--radius-sm)]"
+                      className="text-[0.8rem] py-0.5 px-2.5 rounded-full"
                       style={{
-                        background: "rgba(6, 182, 212, 0.15)",
+                        background: "rgba(6, 182, 212, 0.12)",
                         color: "var(--color-text-secondary)",
+                        border: "1px solid rgba(6, 182, 212, 0.15)",
+                        animation: `fade-in-up 0.3s var(--ease-out) ${i * 0.05}s both`,
                       }}
                     >
                       {name}
@@ -632,38 +651,52 @@ export default function HomePage() {
               {/* Recommendation */}
               {workflowResult.recommended && (
                 <div
-                  className="p-[var(--spacing-xl)] text-center"
+                  className="p-[var(--spacing-xl)] text-center relative overflow-hidden"
                   style={{
-                    background: "linear-gradient(180deg, rgba(6, 182, 212, 0.05) 0%, transparent 100%)",
+                    background: "linear-gradient(180deg, rgba(6, 182, 212, 0.06) 0%, transparent 100%)",
                     borderBottom: "1px solid var(--color-border)",
                   }}
                 >
+                  {/* Radial glow behind the name */}
                   <div
-                    className="inline-block py-[var(--spacing-xs)] px-[var(--spacing-md)] text-white font-[family-name:var(--font-satoshi)] text-[0.7rem] font-semibold uppercase tracking-[0.1em] rounded-[var(--radius-md)] mb-[var(--spacing-md)]"
+                    className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] h-[200px] pointer-events-none"
+                    style={{
+                      background: "radial-gradient(ellipse at center, rgba(6, 182, 212, 0.1) 0%, transparent 70%)",
+                    }}
+                  />
+                  <div
+                    className="inline-block py-[var(--spacing-xs)] px-[var(--spacing-md)] text-white font-[family-name:var(--font-satoshi)] text-[0.7rem] font-semibold uppercase tracking-[0.12em] rounded-full mb-[var(--spacing-md)] relative"
                     style={{
                       background: "linear-gradient(135deg, var(--color-accent) 0%, var(--color-gold) 100%)",
+                      boxShadow: "0 2px 12px -2px rgba(6, 182, 212, 0.4)",
                     }}
                   >
                     Recommended
                   </div>
                   <div
-                    className="font-[family-name:var(--font-clash)] text-[2.5rem] font-semibold mb-[var(--spacing-sm)]"
+                    className="font-[family-name:var(--font-clash)] text-[2.5rem] font-semibold mb-[var(--spacing-sm)] relative"
                     style={{ color: "var(--color-text-primary)" }}
                   >
                     {workflowResult.recommended.name}
                   </div>
                   <div
-                    className="font-[family-name:var(--font-satoshi)] text-[1.1rem] mb-[var(--spacing-xs)]"
+                    className="font-[family-name:var(--font-satoshi)] text-[1.1rem] mb-[var(--spacing-xs)] relative"
                     style={{ color: "var(--color-text-secondary)" }}
                   >
                     Score:{" "}
-                    <strong className="font-bold" style={{ color: "var(--color-success)" }}>
+                    <strong
+                      className="font-bold text-[1.25rem]"
+                      style={{
+                        color: "var(--color-success)",
+                        textShadow: "0 0 20px rgba(16, 185, 129, 0.3)",
+                      }}
+                    >
                       {Math.round(workflowResult.recommended.score)}
                     </strong>
-                    /100
+                    <span className="text-[0.9rem]">/100</span>
                   </div>
                   <div
-                    className="font-[family-name:var(--font-satoshi)] text-[0.85rem]"
+                    className="font-[family-name:var(--font-satoshi)] text-[0.85rem] relative"
                     style={{ color: "var(--color-text-muted)" }}
                   >
                     Source:{" "}
@@ -768,7 +801,7 @@ export default function HomePage() {
           {[
             {
               icon: (
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
                   <circle cx="12" cy="12" r="10" />
                   <path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
                 </svg>
@@ -778,7 +811,7 @@ export default function HomePage() {
             },
             {
               icon: (
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
                   <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
                 </svg>
               ),
@@ -787,7 +820,7 @@ export default function HomePage() {
             },
             {
               icon: (
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
                   <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z" />
                   <path d="M19 10v2a7 7 0 0 1-14 0v-2M12 19v4M8 23h8" />
                 </svg>
@@ -797,7 +830,7 @@ export default function HomePage() {
             },
             {
               icon: (
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
                   <circle cx="12" cy="12" r="10" />
                   <line x1="2" y1="12" x2="22" y2="12" />
                   <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
@@ -808,7 +841,7 @@ export default function HomePage() {
             },
             {
               icon: (
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
                   <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" />
                 </svg>
               ),
@@ -817,7 +850,7 @@ export default function HomePage() {
             },
             {
               icon: (
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
                   <circle cx="12" cy="12" r="3" />
                   <circle cx="12" cy="12" r="8" opacity="0.5" />
                   <path d="M12 2v2M12 20v2M2 12h2M20 12h2" />
@@ -828,7 +861,7 @@ export default function HomePage() {
             },
             {
               icon: (
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
                   <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
                 </svg>
               ),
@@ -837,7 +870,7 @@ export default function HomePage() {
             },
             {
               icon: (
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
                   <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
                   <polyline points="14 2 14 8 20 8" />
                   <line x1="16" y1="13" x2="8" y2="13" />
@@ -851,26 +884,34 @@ export default function HomePage() {
           ].map((feature, i) => (
             <div
               key={i}
-              className="p-[var(--spacing-xl)] text-left transition-all duration-[var(--duration-normal)] relative overflow-hidden group rounded-[var(--radius-xl)] hover:-translate-y-1"
+              className="p-[var(--spacing-xl)] text-left transition-all duration-[var(--duration-normal)] relative overflow-hidden group rounded-[var(--radius-xl)] hover:-translate-y-1 border-hover-glow"
               style={{
                 background: "var(--color-bg-card)",
                 border: "1px solid var(--color-border)",
               }}
             >
+              {/* Hover glow overlay */}
               <div
-                className="w-12 h-12 mb-[var(--spacing-lg)] p-[var(--spacing-sm)] rounded-[var(--radius-lg)] flex items-center justify-center"
+                className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
+                style={{
+                  background: "radial-gradient(600px circle at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(6, 182, 212, 0.06), transparent 40%)",
+                }}
+              />
+              <div
+                className="w-11 h-11 mb-[var(--spacing-lg)] p-2.5 rounded-[var(--radius-lg)] flex items-center justify-center transition-all duration-300 group-hover:scale-110 group-hover:shadow-[0_0_20px_-4px_rgba(6,182,212,0.4)]"
                 style={{
                   background: "var(--color-accent-glow)",
                   color: "var(--color-accent)",
+                  border: "1px solid rgba(6, 182, 212, 0.15)",
                 }}
               >
                 {feature.icon}
               </div>
-              <h3 className="font-[family-name:var(--font-clash)] text-[1.25rem] font-semibold mb-[var(--spacing-sm)] tracking-[0.01em]">
+              <h3 className="font-[family-name:var(--font-clash)] text-[1.2rem] font-semibold mb-[var(--spacing-sm)] tracking-[0.01em] relative">
                 {feature.title}
               </h3>
               <p
-                className="font-[family-name:var(--font-satoshi)] text-base leading-relaxed"
+                className="font-[family-name:var(--font-satoshi)] text-[0.95rem] leading-relaxed relative"
                 style={{ color: "var(--color-text-secondary)" }}
               >
                 {feature.desc}
@@ -882,13 +923,14 @@ export default function HomePage() {
 
       {/* How It Works */}
       <section
-        className="py-[var(--spacing-4xl)] px-[var(--spacing-lg)] max-w-[1200px] mx-auto relative max-md:py-[var(--spacing-3xl)] max-md:px-[var(--spacing-md)]"
+        className="py-[var(--spacing-4xl)] px-[var(--spacing-lg)] relative max-md:py-[var(--spacing-3xl)] max-md:px-[var(--spacing-md)]"
         style={{
           background: "var(--color-bg-elevated)",
           borderTop: "1px solid var(--color-border)",
           borderBottom: "1px solid var(--color-border)",
         }}
       >
+        <div className="max-w-[1200px] mx-auto">
         <h2 className="font-[family-name:var(--font-clash)] text-[clamp(2rem,5vw,3rem)] font-semibold tracking-[-0.03em] text-center mb-[var(--spacing-3xl)]">
           How it works
         </h2>
@@ -919,9 +961,9 @@ export default function HomePage() {
               desc: "Review the unified scorecard, compare candidates side-by-side, and choose the name that's destined for success.",
             },
           ].map((step, i) => (
-            <div key={i} className="text-center relative">
+            <div key={i} className="text-center relative group">
               <div
-                className="w-12 h-12 mx-auto mb-[var(--spacing-lg)] flex items-center justify-center rounded-full font-[family-name:var(--font-clash)] text-[1.25rem] font-bold relative z-1"
+                className="w-14 h-14 mx-auto mb-[var(--spacing-lg)] flex items-center justify-center rounded-full font-[family-name:var(--font-clash)] text-[1.25rem] font-bold relative z-1 transition-all duration-300 group-hover:shadow-[0_0_24px_-4px_rgba(6,182,212,0.5)] group-hover:scale-105"
                 style={{
                   background: "var(--color-bg)",
                   border: "2px solid var(--color-accent)",
@@ -930,17 +972,18 @@ export default function HomePage() {
               >
                 {step.num}
               </div>
-              <h3 className="font-[family-name:var(--font-clash)] text-[1.15rem] font-semibold mb-[var(--spacing-sm)]">
+              <h3 className="font-[family-name:var(--font-clash)] text-[1.15rem] font-semibold mb-[var(--spacing-sm)] transition-colors duration-200 group-hover:text-[var(--color-accent-bright)]">
                 {step.title}
               </h3>
               <p
-                className="font-[family-name:var(--font-satoshi)] text-[0.95rem] leading-relaxed"
+                className="font-[family-name:var(--font-satoshi)] text-[0.95rem] leading-relaxed max-w-[280px] mx-auto"
                 style={{ color: "var(--color-text-secondary)" }}
               >
                 {step.desc}
               </p>
             </div>
           ))}
+        </div>
         </div>
       </section>
 
@@ -968,10 +1011,10 @@ export default function HomePage() {
         <div className="flex gap-[var(--spacing-md)] justify-center flex-wrap relative z-1 max-[480px]:flex-col max-[480px]:w-full max-[480px]:px-[var(--spacing-md)]">
           <a
             href="#demo"
-            className="font-[family-name:var(--font-satoshi)] py-[var(--spacing-md)] px-[var(--spacing-xl)] text-[0.95rem] font-semibold rounded-[var(--radius-xl)] no-underline cursor-pointer text-white transition-all duration-[var(--duration-normal)] hover:-translate-y-0.5 max-[480px]:w-full max-[480px]:text-center"
+            className="font-[family-name:var(--font-satoshi)] py-[var(--spacing-md)] px-[var(--spacing-2xl)] text-[1rem] font-semibold rounded-[var(--radius-xl)] no-underline cursor-pointer text-white transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_0_0_1px_rgba(6,182,212,0.6),0_12px_40px_-6px_rgba(6,182,212,0.5),inset_0_1px_0_rgba(255,255,255,0.25)] max-[480px]:w-full max-[480px]:text-center"
             style={{
               background: "linear-gradient(135deg, var(--color-accent) 0%, var(--color-accent-dim) 100%)",
-              boxShadow: "0 0 0 1px rgba(6, 182, 212, 0.5), 0 4px 24px -4px rgba(6, 182, 212, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.2)",
+              boxShadow: "0 0 0 1px rgba(6, 182, 212, 0.5), 0 4px 24px -4px rgba(6, 182, 212, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.2)",
             }}
           >
             Consult the oracle
@@ -981,44 +1024,50 @@ export default function HomePage() {
 
       {/* Footer */}
       <footer
-        className="text-center py-[var(--spacing-2xl)] px-[var(--spacing-lg)] mt-[var(--spacing-2xl)]"
+        className="text-center py-[var(--spacing-3xl)] px-[var(--spacing-lg)] mt-[var(--spacing-xl)]"
         style={{ borderTop: "1px solid var(--color-border)" }}
       >
         <p
-          className="font-[family-name:var(--font-satoshi)] text-[0.85rem] mb-[var(--spacing-sm)]"
+          className="font-[family-name:var(--font-satoshi)] text-[0.85rem] mb-[var(--spacing-md)] tracking-[0.02em]"
           style={{ color: "var(--color-text-muted)" }}
         >
           Open source brand name intelligence
         </p>
-        <div className="flex justify-center items-center gap-[var(--spacing-sm)] flex-wrap">
+        <div className="flex justify-center items-center gap-[var(--spacing-md)] flex-wrap">
           <a
             href="https://github.com/MaxGhenis/namecast"
-            className="font-[family-name:var(--font-satoshi)] text-[0.8rem] no-underline transition-colors duration-200 hover:text-[var(--color-accent)]"
+            className="font-[family-name:var(--font-satoshi)] text-[0.8rem] no-underline transition-all duration-200 hover:text-[var(--color-accent)]"
             style={{ color: "var(--color-text-secondary)" }}
           >
             GitHub
           </a>
-          <span className="text-[0.7rem]" style={{ color: "var(--color-text-muted)" }}>
-            &middot;
+          <span className="text-[0.5rem]" style={{ color: "var(--color-border-glow)" }}>
+            &#9670;
           </span>
           <a
             href="https://pypi.org/project/namecast/"
-            className="font-[family-name:var(--font-satoshi)] text-[0.8rem] no-underline transition-colors duration-200 hover:text-[var(--color-accent)]"
+            className="font-[family-name:var(--font-satoshi)] text-[0.8rem] no-underline transition-all duration-200 hover:text-[var(--color-accent)]"
             style={{ color: "var(--color-text-secondary)" }}
           >
             Python Package
           </a>
-          <span className="text-[0.7rem]" style={{ color: "var(--color-text-muted)" }}>
-            &middot;
+          <span className="text-[0.5rem]" style={{ color: "var(--color-border-glow)" }}>
+            &#9670;
           </span>
           <a
             href="https://github.com/MaxGhenis/namecast#claude-code-plugin"
-            className="font-[family-name:var(--font-satoshi)] text-[0.8rem] no-underline transition-colors duration-200 hover:text-[var(--color-accent)]"
+            className="font-[family-name:var(--font-satoshi)] text-[0.8rem] no-underline transition-all duration-200 hover:text-[var(--color-accent)]"
             style={{ color: "var(--color-text-secondary)" }}
           >
             Claude Code Plugin
           </a>
         </div>
+        <p
+          className="font-[family-name:var(--font-mono)] text-[0.7rem] mt-[var(--spacing-lg)]"
+          style={{ color: "var(--color-text-faint)" }}
+        >
+          &copy; {new Date().getFullYear()} Namecast
+        </p>
       </footer>
     </div>
   );
@@ -1043,10 +1092,10 @@ function CandidateRow({
   onToggle: () => void;
 }) {
   const rowStyle: React.CSSProperties = {
-    opacity: !candidate.passed_domain_filter ? 0.5 : 1,
+    opacity: !candidate.passed_domain_filter ? 0.4 : 1,
     cursor: eval_ ? "pointer" : "default",
-    background: isExpanded ? "rgba(6, 182, 212, 0.1)" : undefined,
-    transition: "background 0.2s",
+    background: isExpanded ? "rgba(6, 182, 212, 0.08)" : undefined,
+    transition: "all 0.2s",
   };
 
   const tdStyle: React.CSSProperties = {
@@ -1130,8 +1179,9 @@ function CandidateRow({
             colSpan={7}
             style={{
               padding: 0,
-              background: "rgba(15, 23, 42, 0.6)",
-              borderBottom: "2px solid var(--color-accent)",
+              background: "rgba(10, 15, 30, 0.7)",
+              borderBottom: "2px solid rgba(6, 182, 212, 0.4)",
+              borderTop: "1px solid rgba(6, 182, 212, 0.15)",
             }}
           >
             <div className="p-[var(--spacing-lg)] grid grid-cols-[repeat(auto-fit,minmax(280px,1fr))] gap-[var(--spacing-lg)]">
@@ -1149,26 +1199,37 @@ function CandidateRow({
                     ...(eval_.similar_companies_score !== undefined
                       ? [{ label: "Uniqueness", value: Math.round(eval_.similar_companies_score) }]
                       : []),
-                  ].map((item, idx) => (
-                    <div
-                      key={idx}
-                      className="flex flex-col items-center p-[var(--spacing-sm)] rounded-[var(--radius-sm)]"
-                      style={{ background: "rgba(15, 23, 42, 0.5)" }}
-                    >
-                      <span
-                        className="text-[0.7rem] uppercase tracking-[0.05em]"
-                        style={{ color: "var(--color-text-muted)" }}
+                  ].map((item, idx) => {
+                    const scoreColor =
+                      typeof item.value === "number" && item.value >= 70
+                        ? "var(--color-success)"
+                        : typeof item.value === "number" && item.value >= 40
+                          ? "var(--color-gold)"
+                          : "var(--color-accent)";
+                    return (
+                      <div
+                        key={idx}
+                        className="flex flex-col items-center p-[var(--spacing-sm)] rounded-[var(--radius-md)] transition-all duration-200 hover:scale-105"
+                        style={{
+                          background: "rgba(10, 10, 30, 0.6)",
+                          border: "1px solid rgba(30, 30, 69, 0.4)",
+                        }}
                       >
-                        {item.label}
-                      </span>
-                      <span
-                        className="font-[family-name:var(--font-clash)] text-[1.25rem] font-semibold"
-                        style={{ color: "var(--color-accent)" }}
-                      >
-                        {item.value}
-                      </span>
-                    </div>
-                  ))}
+                        <span
+                          className="text-[0.65rem] uppercase tracking-[0.06em] mb-0.5"
+                          style={{ color: "var(--color-text-muted)" }}
+                        >
+                          {item.label}
+                        </span>
+                        <span
+                          className="font-[family-name:var(--font-clash)] text-[1.3rem] font-semibold"
+                          style={{ color: scoreColor }}
+                        >
+                          {item.value}
+                        </span>
+                      </div>
+                    );
+                  })}
                 </div>
               </DetailSection>
 
@@ -1323,15 +1384,19 @@ function DetailSection({
 }) {
   return (
     <div
-      className="rounded-[var(--radius-md)] p-[var(--spacing-md)]"
+      className="rounded-[var(--radius-lg)] p-[var(--spacing-md)] transition-all duration-200 hover:border-[rgba(6,182,212,0.25)]"
       style={{
-        background: "rgba(30, 41, 59, 0.5)",
+        background: "rgba(15, 15, 36, 0.6)",
         border: "1px solid var(--color-border)",
+        backdropFilter: "blur(8px)",
       }}
     >
       <h5
-        className="font-[family-name:var(--font-clash)] text-[0.85rem] font-semibold uppercase tracking-[0.05em] mb-[var(--spacing-sm)]"
-        style={{ color: "var(--color-accent)" }}
+        className="font-[family-name:var(--font-clash)] text-[0.8rem] font-semibold uppercase tracking-[0.08em] mb-[var(--spacing-sm)] pb-[var(--spacing-xs)]"
+        style={{
+          color: "var(--color-accent)",
+          borderBottom: "1px solid rgba(6, 182, 212, 0.12)",
+        }}
       >
         {title}
       </h5>
