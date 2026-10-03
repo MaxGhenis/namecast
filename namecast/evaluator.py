@@ -7,6 +7,8 @@ import json
 import whois
 import httpx
 
+from namecast.llm import MAX_TOKENS, OUTPUT_CONFIG, SONNET_MODEL, response_text
+
 # Cache for domain pricing to avoid repeated API calls
 _pricing_cache: dict = {}
 
@@ -475,12 +477,13 @@ Guidelines for confusion_risk:
 Only include companies with similarity_score > 0.4. Respond ONLY with valid JSON, no markdown."""
 
         response = client.messages.create(
-            model="claude-sonnet-4-20250514",
-            max_tokens=1000,
+            model=SONNET_MODEL,
+            max_tokens=MAX_TOKENS,
+            output_config=OUTPUT_CONFIG,
             messages=[{"role": "user", "content": prompt}],
         )
 
-        result = json.loads(response.content[0].text)
+        result = json.loads(response_text(response))
 
         matches = [
             SimilarCompany(
@@ -805,12 +808,13 @@ Respond in JSON:
 Respond ONLY with valid JSON."""
 
         response = client.messages.create(
-            model="claude-sonnet-4-20250514",
-            max_tokens=500,
+            model=SONNET_MODEL,
+            max_tokens=MAX_TOKENS,
+            output_config=OUTPUT_CONFIG,
             messages=[{"role": "user", "content": prompt}],
         )
 
-        result = json.loads(response.content[0].text)
+        result = json.loads(response_text(response))
 
         return BrandScopeResult(
             narrowness=result["narrowness"],
@@ -845,12 +849,13 @@ Respond with ONLY a JSON array:
 ["tagline 1", "tagline 2", "tagline 3"]"""
 
             response = client.messages.create(
-                model="claude-sonnet-4-20250514",
-                max_tokens=300,
+                model=SONNET_MODEL,
+                max_tokens=MAX_TOKENS,
+                output_config=OUTPUT_CONFIG,
                 messages=[{"role": "user", "content": prompt}],
             )
 
-            text = response.content[0].text.strip()
+            text = response_text(response).strip()
             if text.startswith("```"):
                 text = text.split("```")[1]
                 if text.startswith("json"):
@@ -1002,8 +1007,9 @@ class NamecastWorkflow:
             client = Anthropic()
 
             response = client.messages.create(
-                model="claude-sonnet-4-20250514",
-                max_tokens=1024,
+                model=SONNET_MODEL,
+                max_tokens=MAX_TOKENS,
+                output_config=OUTPUT_CONFIG,
                 messages=[{
                     "role": "user",
                     "content": f"""Generate {count} brand name ideas for this project:
@@ -1030,7 +1036,7 @@ Respond with ONLY a JSON array of names, no explanation:
             )
 
             # Parse JSON from response
-            text = response.content[0].text.strip()
+            text = response_text(response).strip()
             # Handle markdown code blocks
             if text.startswith("```"):
                 text = text.split("```")[1]

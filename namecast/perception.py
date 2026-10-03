@@ -5,6 +5,8 @@ from dataclasses import dataclass
 from typing import Optional
 from anthropic import Anthropic
 
+from namecast.llm import MAX_TOKENS, OPUS_MODEL, OUTPUT_CONFIG, response_text
+
 
 @dataclass
 class PersonaResponse:
@@ -151,12 +153,13 @@ Respond ONLY with valid JSON array."""
 
     try:
         response = client.messages.create(
-            model="claude-opus-4-5-20251101",
-            max_tokens=800,
+            model=OPUS_MODEL,
+            max_tokens=MAX_TOKENS,
+            output_config=OUTPUT_CONFIG,
             messages=[{"role": "user", "content": prompt}],
         )
 
-        text = response.content[0].text.strip()
+        text = response_text(response).strip()
         # Handle markdown code blocks
         if text.startswith("```"):
             text = text.split("```")[1]
@@ -233,12 +236,13 @@ Respond ONLY with valid JSON, no other text."""
 
     try:
         response = client.messages.create(
-            model="claude-opus-4-5-20251101",
-            max_tokens=500,
+            model=OPUS_MODEL,
+            max_tokens=MAX_TOKENS,
+            output_config=OUTPUT_CONFIG,
             messages=[{"role": "user", "content": prompt}],
         )
 
-        result = json.loads(response.content[0].text)
+        result = json.loads(response_text(response))
 
         return PersonaResponse(
             persona=persona["name"],
@@ -307,11 +311,12 @@ Synthesize into a single 1-2 sentence summary of what this name evokes. Be speci
 
     try:
         synthesis = client.messages.create(
-            model="claude-opus-4-5-20251101",
-            max_tokens=150,
+            model=OPUS_MODEL,
+            max_tokens=MAX_TOKENS,
+            output_config=OUTPUT_CONFIG,
             messages=[{"role": "user", "content": synthesis_prompt}],
         )
-        evokes_summary = synthesis.content[0].text.strip()
+        evokes_summary = response_text(synthesis).strip()
     except Exception:
         evokes_summary = all_evokes[0] if all_evokes else "professional, modern"
 
@@ -363,11 +368,12 @@ Respond ONLY with valid JSON."""
 
     try:
         response = client.messages.create(
-            model="claude-opus-4-5-20251101",
-            max_tokens=200,
+            model=OPUS_MODEL,
+            max_tokens=MAX_TOKENS,
+            output_config=OUTPUT_CONFIG,
             messages=[{"role": "user", "content": prompt}],
         )
-        return json.loads(response.content[0].text)
+        return json.loads(response_text(response))
     except Exception:
         return {"score": 5.0, "explanation": "Unable to evaluate alignment."}
 
@@ -455,12 +461,13 @@ Respond ONLY with valid JSON."""
 
     try:
         response = client.messages.create(
-            model="claude-opus-4-5-20251101",
-            max_tokens=600,
+            model=OPUS_MODEL,
+            max_tokens=MAX_TOKENS,
+            output_config=OUTPUT_CONFIG,
             messages=[{"role": "user", "content": prompt}],
         )
 
-        text = response.content[0].text.strip()
+        text = response_text(response).strip()
         # Handle markdown code blocks
         if text.startswith("```"):
             text = text.split("```")[1]
