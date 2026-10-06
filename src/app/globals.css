@@ -39,11 +39,9 @@
 
 @theme {
   /* Core palette - deep cosmic indigo */
-  --color-void: #020208;
   --color-bg: #050510;
   --color-bg-elevated: #0a0a1a;
   --color-bg-card: #0f0f24;
-  --color-surface: #161632;
 
   /* Borders - crystalline edges */
   --color-border: #1e1e45;
@@ -61,7 +59,6 @@
   --color-accent-bright: #22d3ee;
   --color-accent-dim: #0891b2;
   --color-accent-glow: rgba(6, 182, 212, 0.15);
-  --color-accent-intense: rgba(6, 182, 212, 0.4);
 
   /* Secondary accent - Oracle gold */
   --color-gold: #f59e0b;
@@ -73,8 +70,6 @@
 
   /* Semantic */
   --color-success: #10b981;
-  --color-success-glow: rgba(16, 185, 129, 0.15);
-  --color-warning: #f59e0b;
   --color-error: #f43f5e;
 
   /* Typography */
@@ -244,11 +239,6 @@ textarea:focus::placeholder {
   50% { border-color: rgba(6, 182, 212, 0.5); }
 }
 
-@keyframes float {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-6px); }
-}
-
 @keyframes grain {
   0%, 100% { transform: translate(0, 0); }
   10% { transform: translate(-5%, -10%); }
@@ -284,27 +274,6 @@ body::before {
    UTILITY CLASSES
    ============================================ */
 
-/* Gradient border card hover effect */
-.card-glow {
-  position: relative;
-}
-
-.card-glow::before {
-  content: '';
-  position: absolute;
-  inset: -1px;
-  border-radius: inherit;
-  background: linear-gradient(135deg, rgba(6, 182, 212, 0) 0%, rgba(6, 182, 212, 0.3) 50%, rgba(245, 158, 11, 0) 100%);
-  opacity: 0;
-  transition: opacity 0.4s;
-  z-index: -1;
-  pointer-events: none;
-}
-
-.card-glow:hover::before {
-  opacity: 1;
-}
-
 /* Shimmer loading effect */
 .shimmer {
   background: linear-gradient(
@@ -317,14 +286,6 @@ body::before {
   animation: shimmer 2s ease-in-out infinite;
 }
 
-/* Gradient text utility */
-.text-gradient-cosmic {
-  background: linear-gradient(135deg, var(--color-text-primary) 0%, var(--color-accent) 50%, var(--color-gold) 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
-
 /* Smooth border highlight on hover */
 .border-hover-glow {
   transition: border-color 0.3s, box-shadow 0.3s;
@@ -333,4 +294,21 @@ body::before {
 .border-hover-glow:hover {
   border-color: rgba(6, 182, 212, 0.4) !important;
   box-shadow: 0 0 20px -5px rgba(6, 182, 212, 0.15);
+}
+
+/* Font family utilities */
+.font-clash {
+  font-family: var(--font-clash);
+}
+
+.font-satoshi {
+  font-family: var(--font-satoshi);
+}
+
+.font-display {
+  font-family: var(--font-display);
+}
+
+.font-mono-theme {
+  font-family: var(--font-mono);
 }
