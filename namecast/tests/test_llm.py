@@ -1,12 +1,13 @@
 """Tests for the Claude API call sites.
 
-Requests go through the real Anthropic SDK with a mock HTTP transport, so the
-tests check the exact request body the SDK sends and parse real response
-objects. Nothing reaches the network.
+The call-site tests send requests through the real Anthropic SDK with a mock
+HTTP transport, so they check the exact request body the SDK sends and parse
+real response objects. Nothing reaches the network.
 """
 
 import itertools
 import json
+from pathlib import Path
 from types import SimpleNamespace
 
 import anthropic
@@ -17,9 +18,10 @@ if int(anthropic.__version__.split(".", 1)[0]) >= 1:
 else:  # anthropic 0.x uses httpx, even when httpx2 is also installed
     import httpx as sdk_httpx
 
-from namecast import perception
+from namecast import evaluator, perception
 from namecast.evaluator import BrandEvaluator, NamecastWorkflow
 from namecast.llm import (
+    EFFORT,
     MAX_TOKENS,
     OPUS_MODEL,
     SONNET_MODEL,
@@ -32,7 +34,9 @@ RealAnthropic = anthropic.Anthropic
 PERSONA = perception.DEFAULT_PERSONAS[0]
 MISSION = "An education technology platform for lifelong learners"
 
-# Parameters Claude Opus 5.5 / Sonnet 5.5 reject (400) or that force tool use or prefill.
+# Fields no call site may send: sampling parameters (Opus 5.5 rejects them, Sonnet 5.5
+# rejects non-default values), `thinking` (disabled or budgeted thinking is a 400; the
+# calls omit it to get adaptive thinking), and `tool_choice` (forced tool use is a 400).
 FORBIDDEN_PARAMS = {"temperature", "top_p", "top_k", "thinking", "tool_choice"}
 
 
@@ -59,11 +63,17 @@ def _text_reply(payload):
     ])
 
 
-REFUSAL = _message(
-    [],
-    stop_reason="refusal",
-    stop_details={"type": "refusal", "category": "cyber", "explanation": None},
-)
+def _refusal(payload=None):
+    """A refusal, optionally carrying text that would parse if the refusal were ignored."""
+    content = _text_reply(payload)["content"] if payload is not None else []
+    return _message(
+        content,
+        stop_reason="refusal",
+        stop_details={"type": "refusal", "category": "cyber", "explanation": None},
+    )
+
+
+REFUSAL = _refusal()
 
 
 class Recorder:
@@ -257,9 +267,12 @@ class TestCallSites:
         recorder = api_env(_text_reply(payload))
         assert ok(run(recorder))
 
+    @pytest.mark.parametrize("with_text", [False, True], ids=["empty", "with_text"])
     @pytest.mark.parametrize("model,payload,run,_ok,fallback", CALL_SITES)
-    def test_refusal_uses_existing_fallback(self, api_env, model, payload, run, _ok, fallback):
-        recorder = api_env(REFUSAL)
+    def test_refusal_uses_existing_fallback(self, api_env, model, payload, run, _ok, fallback, with_text):
+        # with_text: the refusal carries the success payload, so a call site that
+        # skipped the refusal check would parse it instead of falling back.
+        recorder = api_env(_refusal(payload if with_text else None))
         assert fallback(run(recorder))
         assert len(recorder.requests) == 1
 
@@ -304,6 +317,33 @@ class TestResponseText:
         with pytest.raises(ClaudeRefusalError):
             response_text(response)
 
+    def test_refusal_category_from_sdk_response(self):
+        """The category survives SDK parsing, including SDKs that predate the stop_details field."""
+        response = Recorder(REFUSAL).client().messages.create(
+            model=OPUS_MODEL,
+            max_tokens=MAX_TOKENS,
+            messages=[{"role": "user", "content": "Hi"}],
+        )
+        with pytest.raises(ClaudeRefusalError, match="cyber"):
+            response_text(response)
+
 
 def test_max_tokens_leaves_room_for_thinking():
     assert MAX_TOKENS >= 16000
+
+
+def test_every_call_site_is_covered():
+    """CALL_SITES lists every messages.create call, so the request-shape checks reach them all."""
+    source = Path(evaluator.__file__).read_text() + Path(perception.__file__).read_text()
+    assert source.count("messages.create(") == len(CALL_SITES)
+
+
+def test_readme_matches_settings():
+    readme = (Path(__file__).resolve().parents[2] / "README.md").read_text()
+    for documented in (
+        f"`{SONNET_MODEL}`",
+        f"`{OPUS_MODEL}`",
+        f"{EFFORT} effort",
+        f"{MAX_TOKENS:,}-token limit",
+    ):
+        assert documented in readme

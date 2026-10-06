@@ -5,8 +5,9 @@ SONNET_MODEL = "claude-sonnet-5-5"
 # Perception calls (personas, synthesis, mission alignment, two-pass analysis)
 OPUS_MODEL = "claude-opus-5-5"
 
-# Thinking is always on for the 5.5 models and counts toward max_tokens.
-# Every call here is short JSON or text generation, so run at low effort.
+# No call sends `thinking`, so both 5.5 models think adaptively (Opus 5.5 cannot
+# turn thinking off), and thinking tokens count toward max_tokens. Every call
+# here is short JSON or text generation, so run at low effort.
 EFFORT = "low"
 OUTPUT_CONFIG = {"effort": EFFORT}
 MAX_TOKENS = 16000
@@ -25,7 +26,11 @@ def response_text(response) -> str:
     """
     if response.stop_reason == "refusal":
         details = getattr(response, "stop_details", None)
-        category = getattr(details, "category", None)
+        # SDKs older than the stop_details field keep it as a plain dict.
+        if isinstance(details, dict):
+            category = details.get("category")
+        else:
+            category = getattr(details, "category", None)
         raise ClaudeRefusalError(f"Claude declined the request (category: {category})")
 
     text = "".join(block.text for block in response.content if block.type == "text")
