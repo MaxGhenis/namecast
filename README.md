@@ -32,6 +32,11 @@ Requires an Anthropic API key:
 export ANTHROPIC_API_KEY=your-key-here
 ```
 
+The Python CLI and API use `claude-sonnet-5-5` for name generation and evaluator
+analysis, and `claude-opus-5-5` for persona perception. Both use low effort with
+a 16,000-token limit that includes thinking. Model IDs are defined in
+`namecast/llm.py`; there are no model environment variable overrides.
+
 ## Usage
 
 ### CLI
